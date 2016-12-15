@@ -1,0 +1,4 @@
+--markup markdown
+lib/**/*.rb
+-
+LICENSE.txt
