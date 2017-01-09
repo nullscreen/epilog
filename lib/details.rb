@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-require 'details/version'
+require 'logger'
 
-class Details < Logger
-end
+require 'details/version'
+require 'details/logger'
+require 'details/log_formatter'
+require 'details/rails' if defined?(Rails)
