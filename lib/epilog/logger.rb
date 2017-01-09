@@ -1,4 +1,4 @@
-module Details
+module Epilog
   class Logger < ::Logger
     def initialize
       super

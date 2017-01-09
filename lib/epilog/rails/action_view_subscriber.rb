@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Details
+module Epilog
   module Rails
     class ActionViewSubscriber < ActiveSupport::LogSubscriber
     end

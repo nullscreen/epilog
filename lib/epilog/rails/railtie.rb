@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Details
+module Epilog
   module Rails
     class Railtie < ::Rails::Railtie
       SUBSCRIBERS = {
@@ -10,7 +10,7 @@ module Details
         active_record: ActiveRecordSubscriber
       }.freeze
 
-      config.details = ActiveSupport::OrderedOptions.new(
+      config.epilog = ActiveSupport::OrderedOptions.new(
         subscriber_blacklist: [
           ActionController::LogSubscriber,
           ActionMailer::LogSubscriber,
@@ -25,15 +25,15 @@ module Details
         ]
       )
 
-      initializer 'details.configure' do |app|
-        app.config.details.logger ||= Rails.logger
+      initializer 'epilog.configure' do |app|
+        app.config.epilog.logger ||= Rails.logger
 
-        disable_rails_defaults(app.config.details.subscriber_blacklist)
+        disable_rails_defaults(app.config.epilog.subscriber_blacklist)
 
-        app.config.details.subscriptions.each do |namespace|
+        app.config.epilog.subscriptions.each do |namespace|
           subscriber_class = SUBSCRIBERS[namespace]
           subscriber = subscriber_class.new
-          subscriber.logger = app.config.details.logger
+          subscriber.logger = app.config.epilog.logger
           subscriber_class.attach_to(namespace)
         end
       end

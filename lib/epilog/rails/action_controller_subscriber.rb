@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Details
+module Epilog
   module Rails
     class ActionControllerSubscriber < ActiveSupport::LogSubscriber
       RAILS_PARAMS = %i(controller action format _method only_path).freeze

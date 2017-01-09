@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-module Details
+module Epilog
   class Formatter
     SEVERITY_MAP = {
       'FATAL' => 'ALERT',

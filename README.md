@@ -1,4 +1,4 @@
-# Details Gem
+# Epilog Gem
 
 TODO: Gem description goes here
 
@@ -7,7 +7,7 @@ TODO: Gem description goes here
 Add this line to your application's `Gemfile`:
 
 ```ruby
-gem 'details'
+gem 'epilog'
 ```
 
 ## Development
@@ -18,4 +18,4 @@ experiment.
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at
-https://github.com/justinhoward/details.
+https://github.com/justinhoward/epilog.
