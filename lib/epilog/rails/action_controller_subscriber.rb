@@ -66,7 +66,7 @@ module Epilog
         define_method(method) do |event|
           return unless logger.info?
 
-          debug(basic_message(event, "#{method.to_s} " \
+          debug(basic_message(event, "#{method} " \
             "#{event.payload[:key] || event.payload[:path]}"))
         end
       end

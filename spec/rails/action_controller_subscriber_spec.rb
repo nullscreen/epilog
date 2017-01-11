@@ -331,14 +331,16 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
         'DEBUG',
         Time.now,
         'epilog',
-        '  Cache digest for app/views/fragment/index.html.erb: a95025bad961ccf31e377774190b64af'
+        '  Cache digest for app/views/fragment/index.html.erb: ' \
+          'a95025bad961ccf31e377774190b64af'
       )
 
       expect(Rails.logger.formatter).to receive(:call).with(
         'DEBUG',
         Time.now,
         'epilog',
-        '  Cache digest for app/views/fragment/_partial.html.erb: 336d5ebc5436534e61d16e63ddfca327'
+        '  Cache digest for app/views/fragment/_partial.html.erb: ' \
+          '336d5ebc5436534e61d16e63ddfca327'
       )
 
       expect(Rails.logger.formatter).to receive(:call).with(
