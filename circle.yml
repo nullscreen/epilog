@@ -1,0 +1,18 @@
+machine:
+  ruby:
+    version: 2.3.3
+  environment:
+    COVERAGE: 1
+
+test:
+  override:
+    - bin/rubocop
+    - bin/rspec --format doc --format RspecJunitFormatter -o "$CIRCLE_TEST_REPORTS/rspec/junit.xml"
+
+general:
+  artifacts:
+    - 'coverage'
+
+database:
+  override:
+    - 'echo "No database"'
