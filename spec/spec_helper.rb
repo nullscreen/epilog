@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'byebug'
 require 'combustion'
 
 Combustion.path = 'spec/rails_app'
@@ -11,7 +12,6 @@ Combustion.initialize! :all do
   config.cache_store = [:file_store, File.join(Rails.root, 'tmp/cache')]
 end
 
-require 'byebug'
 require 'timecop'
 require 'epilog'
 require 'rspec/rails'

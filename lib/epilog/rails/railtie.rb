@@ -66,17 +66,3 @@ module Epilog
     end
   end
 end
-
-module ActiveSupport
-  module Notifications
-    class Fanout
-      module Subscribers
-        class Evented
-          def delegates_to?(delegate)
-            @delegate == delegate
-          end
-        end
-      end
-    end
-  end
-end
