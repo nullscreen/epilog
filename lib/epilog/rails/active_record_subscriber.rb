@@ -2,7 +2,7 @@
 
 module Epilog
   module Rails
-    class ActiveRecordSubscriber < ActiveSupport::LogSubscriber
+    class ActiveRecordSubscriber < LogSubscriber
     end
   end
 end

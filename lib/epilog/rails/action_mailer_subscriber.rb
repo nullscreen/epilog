@@ -2,7 +2,7 @@
 
 module Epilog
   module Rails
-    class ActionMailerSubscriber < ActiveSupport::LogSubscriber
+    class ActionMailerSubscriber < LogSubscriber
     end
   end
 end

@@ -19,3 +19,6 @@ Style/MultilineMethodCallIndentation:
 Style/FrozenStringLiteralComment:
   Enabled: true
   EnforcedStyle: always
+
+Style/EmptyMethod:
+  EnforcedStyle: expanded

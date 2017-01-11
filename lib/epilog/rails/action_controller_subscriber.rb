@@ -2,17 +2,15 @@
 
 module Epilog
   module Rails
-    class ActionControllerSubscriber < ActiveSupport::LogSubscriber
+    class ActionControllerSubscriber < LogSubscriber
       RAILS_PARAMS = %i(controller action format _method only_path).freeze
-      RESPONSE_STATS = %(db_runtime view_runtime).freeze
-
-      attr_reader :logger
+      RESPONSE_STATS = %i(db_runtime view_runtime).freeze
 
       def start_processing(event)
         info do
           {
-            message: "#{message[:request][:method]} " \
-              "#{message[:request][:path]}",
+            message: "#{event.payload[:method]} " \
+              "#{event.payload[:path]} started",
             request: request(event)
           }
         end
@@ -20,10 +18,11 @@ module Epilog
 
       def process_action(event)
         info do
-          status = normalize_status(payload[:status], event)
+          status = normalize_status(event.payload[:status], event)
           {
-            message: "#{status} #{Rack::Utils::HTTP_STATUS_CODES[status]}",
-            request: { id: event.transaction_id },
+            message: "#{event.payload[:method]} #{event.payload[:path]} > " \
+              "#{status} #{Rack::Utils::HTTP_STATUS_CODES[status]}",
+            request: request(event),
             response: { status: status },
             metrics: response_metrics(event)
           }
@@ -39,21 +38,19 @@ module Epilog
       end
 
       def redirect_to(event)
-        info do
-          basic_message(event, "Redirected to #{event.payload[:location]}")
-        end
+        info { basic_message(event, "Redirect > #{event.payload[:location]}") }
       end
 
       def halted_callback(event)
         info do
-          basic_message('Filter chain halted as ' \
+          basic_message(event, 'Filter chain halted as ' \
             "#{event.payload[:filter].inspect} rendered or redirected")
         end
       end
 
       def unpermitted_parameters(event)
         debug do
-          basic_message('Unpermitted parameters ' \
+          basic_message(event, 'Unpermitted parameters: ' \
             "#{event.payload[:keys].join(', ')}")
         end
       end
@@ -68,9 +65,8 @@ module Epilog
       ).each do |method|
         define_method(method) do |event|
           return unless logger.info?
-          return unless ActionController::Base.enable_fragment_cache_logging
 
-          info(basic_message("#{method.to_s.humanize.inspect} " \
+          debug(basic_message(event, "#{method.to_s} " \
             "#{event.payload[:key] || event.payload[:path]}"))
         end
       end
@@ -81,7 +77,6 @@ module Epilog
         payload = event.payload
 
         {
-          id: event.transaction_id,
           method: payload[:method],
           path: payload[:path],
           params: payload[:params].except(*RAILS_PARAMS),
@@ -107,10 +102,9 @@ module Epilog
         end
       end
 
-      def basic_message(message, event)
+      def basic_message(event, message)
         {
           message: message,
-          request: { id: event.transaction_id },
           metrics: { duration: event.duration }
         }
       end

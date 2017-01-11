@@ -6,7 +6,9 @@ module Epilog
       'WARN' => 'WARNING'
     }.freeze
 
-    TIME_FORMAT = '%Y-%m-%dT%H:%M:%S%z'.freeze
+    DEFAULT_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S%z'.freeze
+
+    attr_writer :datetime_format
 
     def call(severity, time, progname, msg)
       log = base_log(severity, time, progname)
@@ -19,11 +21,15 @@ module Epilog
       "#{JSON.dump(log)}\n"
     end
 
+    def datetime_format
+      @datetime_format || DEFAULT_TIME_FORMAT
+    end
+
     private
 
     def base_log(severity, time, progname)
       {
-        timestamp: time.strftime(TIME_FORMAT),
+        timestamp: time.strftime(datetime_format),
         severity: SEVERITY_MAP[severity] || severity,
         source: progname
       }
@@ -31,7 +37,7 @@ module Epilog
 
     def message(msg)
       return { message: msg.message, exception: msg } if msg.is_a?(Exception)
-      return message.to_h if message.respond_to?(:to_h)
+      return msg.to_h if msg.respond_to?(:to_h)
       { message: msg.to_s }
     end
 

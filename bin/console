@@ -11,5 +11,6 @@ require 'epilog'
 # require "pry"
 # Pry.start
 
+require 'byebug'
 require 'irb'
 IRB.start

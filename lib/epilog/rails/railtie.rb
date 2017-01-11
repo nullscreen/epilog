@@ -10,31 +10,32 @@ module Epilog
         active_record: ActiveRecordSubscriber
       }.freeze
 
-      config.epilog = ActiveSupport::OrderedOptions.new(
-        subscriber_blacklist: [
-          ActionController::LogSubscriber,
-          ActionMailer::LogSubscriber,
-          ActionView::LogSubscriber,
-          ActiveRecord::LogSubscriber
-        ],
-        subscriptions: [
-          :action_controller,
-          :action_mailer,
-          :action_view,
-          :active_record
-        ]
-      )
+      config.epilog = ActiveSupport::OrderedOptions.new
+      config.epilog.logger = nil
+      config.epilog.subscriber_blacklist = [
+        ActionController::LogSubscriber,
+        ActionMailer::LogSubscriber,
+        ActionView::LogSubscriber,
+        ActiveRecord::LogSubscriber
+      ]
+      config.epilog.subscriptions = [
+        :action_controller,
+        :action_mailer,
+        :action_view,
+        :active_record
+      ]
 
       initializer 'epilog.configure' do |app|
-        app.config.epilog.logger ||= Rails.logger
+        app.config.epilog.logger ||= ::Rails.logger || Logger.new($stdout)
 
         disable_rails_defaults(app.config.epilog.subscriber_blacklist)
 
         app.config.epilog.subscriptions.each do |namespace|
           subscriber_class = SUBSCRIBERS[namespace]
-          subscriber = subscriber_class.new
-          subscriber.logger = app.config.epilog.logger
-          subscriber_class.attach_to(namespace)
+          subscriber_class.attach_to(
+            namespace,
+            subscriber_class.new(app.config.epilog.logger)
+          )
         end
       end
 
@@ -49,7 +50,8 @@ module Epilog
       end
 
       def unsubscribe_listeners(subscriber, pattern)
-        ActiveSupport::Notifications.listeners_for(pattern).each do |listener|
+        notifier = ActiveSupport::Notifications.notifier
+        notifier.listeners_for(pattern).each do |listener|
           if listener.delegates_to?(subscriber)
             ActiveSupport::Notifications.unsubscribe(listener)
           end

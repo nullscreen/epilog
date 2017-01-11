@@ -21,10 +21,15 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_development_dependency 'bundler', '~> 1.12'
+  spec.add_development_dependency 'byebug', '~> 9.0'
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'rubocop', '~> 0.40'
   spec.add_development_dependency 'rspec', '~> 3.4'
   spec.add_development_dependency 'simplecov', '~> 0.12'
   spec.add_development_dependency 'yard', '~> 0.9'
   spec.add_development_dependency 'rails', '~> 4.2'
+  spec.add_development_dependency 'rspec-rails', '~> 3.5'
+  spec.add_development_dependency 'timecop', '~> 0.8'
+  spec.add_development_dependency 'combustion', '~> 0.5.5'
+  spec.add_development_dependency 'sqlite3', '~> 1.3'
 end
