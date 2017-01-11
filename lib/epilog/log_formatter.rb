@@ -6,7 +6,7 @@ module Epilog
       'WARN' => 'WARNING'
     }.freeze
 
-    DEFAULT_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S%z'.freeze
+    DEFAULT_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S%z'
 
     attr_writer :datetime_format
 
