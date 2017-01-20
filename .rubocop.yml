@@ -2,7 +2,7 @@ AllCops:
   TargetRubyVersion: 2.3
 
 Lint/EndAlignment:
-  AlignWith: variable
+  EnforcedStyleAlignWith: variable
 
 Style/AlignParameters:
   EnforcedStyle: with_fixed_indentation
