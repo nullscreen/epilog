@@ -5,6 +5,7 @@
 /doc/
 /.yardoc/
 .byebug_history
+.ruby-version
 
 /spec/rails_app/log/
 /spec/rails_app/db/test.sqlite

@@ -7,10 +7,12 @@ module Epilog
     end
 
     def datetime_format
+      return unless formatter
       formatter.datetime_format
     end
 
     def datetime_format=(format)
+      return unless formatter
       formatter.datetime_format = format
     end
   end
