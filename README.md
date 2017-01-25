@@ -7,7 +7,7 @@ A JSON logger with Rails support.
 Add this line to your application's `Gemfile`:
 
 ```ruby
-gem 'epilog'
+gem 'epilog', git: 'git@bitbucket.org:machinima-dev/epilog.git', tag: 'v0.1.2'
 ```
 
 ## Basic Usage
