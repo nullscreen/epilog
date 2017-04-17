@@ -4,29 +4,35 @@ module Epilog
   module Rails
     class ActionControllerSubscriber < LogSubscriber
       RAILS_PARAMS = %i[controller action format _method only_path].freeze
-      RESPONSE_STATS = %i[db_runtime view_runtime].freeze
 
-      def start_processing(event)
+      def request_received(event)
         info do
+          request = event.payload[:request]
           {
-            message: "#{event.payload[:method]} " \
-              "#{event.payload[:path]} started",
-            request: request(event)
+            message: "#{request.request_method} #{request.fullpath} started",
+            request: request_hash(event)
           }
         end
       end
 
-      def process_action(event)
+      def process_request(event)
         info do
-          status = normalize_status(event.payload[:status], event)
+          request = event.payload[:request]
+          status = normalize_status(event)
           {
-            message: "#{event.payload[:method]} #{event.payload[:path]} > " \
+            message: "#{request.request_method} #{request.fullpath} > " \
               "#{status} #{Rack::Utils::HTTP_STATUS_CODES[status]}",
-            request: request(event),
-            response: { status: status },
-            metrics: response_metrics(event)
+            request: request_hash(event),
+            response: response_hash(event),
+            metrics: event.payload[:metrics]
           }
         end
+      end
+
+      def start_processing(*)
+      end
+
+      def process_action(*)
       end
 
       def send_data(event)
@@ -73,33 +79,32 @@ module Epilog
 
       private
 
-      def request(event)
-        payload = event.payload
-
+      def request_hash(event)
+        request = event.payload[:request]
         {
-          method: payload[:method],
-          path: payload[:path],
-          params: payload[:params].except(*RAILS_PARAMS),
-          format: payload[:format],
-          controller: payload[:controller],
-          action: payload[:action]
+          method: request.request_method,
+          path: request.fullpath,
+          params: request.filtered_parameters.except(*RAILS_PARAMS),
+          format: request.format.try(:ref),
+          controller: event.payload[:controller],
+          action: event.payload[:action]
         }
       end
 
-      def normalize_status(status, event)
+      def response_hash(event)
+        {
+          status: normalize_status(event)
+        }
+      end
+
+      def normalize_status(event)
         payload = event.payload
+        status = payload[:response].status
         if status.nil? && payload[:exception].present?
           status = ActionDispatch::ExceptionWrapper
             .status_code_for_exception(payload[:exception].first)
         end
         status
-      end
-
-      def response_metrics(event)
-        payload = event.payload
-        RESPONSE_STATS.each_with_object({}) do |stat, metrics|
-          metrics[stat] = payload[stat] if payload[stat]
-        end
       end
 
       def basic_message(event, message)
