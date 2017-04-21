@@ -8,7 +8,12 @@ module Epilog
 
     DEFAULT_TIME_FORMAT = '%Y-%m-%dT%H:%M:%S%z'
 
+    attr_reader :filter
     attr_writer :datetime_format
+
+    def initialize(options = {})
+      @filter = options[:filter] || Filter::Blacklist.new
+    end
 
     def call(severity, time, progname, msg)
       log = base_log(severity, time, progname)
@@ -18,6 +23,7 @@ module Epilog
         log[:exception] = format_error(log[:exception])
       end
 
+      log = before_write(log)
       "#{JSON.dump(log)}\n"
     end
 
@@ -50,6 +56,10 @@ module Epilog
       cause = error.cause
       hash[:parent] = format_error(cause) unless cause.nil?
       hash
+    end
+
+    def before_write(log)
+      @filter ? @filter.call(log) : log
     end
   end
 end
