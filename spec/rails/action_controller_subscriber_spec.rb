@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # rubocop:disable Metrics/BlockLength
 RSpec.describe Epilog::Rails::ActionControllerSubscriber do
   before { Timecop.freeze(Time.local(2017, 1, 10, 5, 0)) }

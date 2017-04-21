@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Epilog
   class Logger < ::Logger
     def initialize(*args, **options)
