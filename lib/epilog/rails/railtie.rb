@@ -18,11 +18,11 @@ module Epilog
       ].freeze
 
       config.epilog = ActiveSupport::OrderedOptions.new
-      config.epilog.subscriptions = [
-        :action_controller,
-        :action_mailer,
-        :action_view,
-        :active_record
+      config.epilog.subscriptions = %i[
+        action_controller
+        action_mailer
+        action_view
+        active_record
       ]
 
       initializer 'epilog.configure' do |app|

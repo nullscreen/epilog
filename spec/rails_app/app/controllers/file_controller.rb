@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class FileController < ActionController::Base
   def index
     send_file(

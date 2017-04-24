@@ -10,4 +10,4 @@ RuboCop::RakeTask.new
 YARD::Rake::YardocTask.new
 
 task default: :check
-task check: [:rubocop, :spec]
+task check: %i[rubocop spec]

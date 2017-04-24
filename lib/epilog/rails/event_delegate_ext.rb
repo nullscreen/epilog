@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module Epilog
   module EventDelegateExt
     def delegates_to?(delegate)

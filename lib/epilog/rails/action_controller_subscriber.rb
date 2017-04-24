@@ -3,8 +3,8 @@
 module Epilog
   module Rails
     class ActionControllerSubscriber < LogSubscriber
-      RAILS_PARAMS = %i(controller action format _method only_path).freeze
-      RESPONSE_STATS = %i(db_runtime view_runtime).freeze
+      RAILS_PARAMS = %i[controller action format _method only_path].freeze
+      RESPONSE_STATS = %i[db_runtime view_runtime].freeze
 
       def start_processing(event)
         info do
@@ -55,14 +55,14 @@ module Epilog
         end
       end
 
-      %i(
+      %i[
         write_fragment
         read_fragment
         exist_fragment?
         expire_fragment
         expire_page
         write_page
-      ).each do |method|
+      ].each do |method|
         define_method(method) do |event|
           return unless logger.info?
 
