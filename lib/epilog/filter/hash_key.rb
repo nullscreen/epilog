@@ -9,14 +9,22 @@ module Epilog
 
       private
 
-      def fix(hash)
+      def fix(value)
+        if value.is_a?(Hash)
+          fix_hash(value)
+        elsif value.is_a?(Array)
+          value.map { |i| fix(i) }
+        else
+          value
+        end
+      end
+
+      def fix_hash(hash)
         hash.each_with_object({}) do |(key, value), obj|
           obj[key] = if key?(key)
             filter(value)
-          elsif value.is_a?(Hash)
-            fix(value)
           else
-            value
+            fix(value)
           end
         end
       end

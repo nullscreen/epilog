@@ -7,14 +7,16 @@ module Epilog
         action_controller: ActionControllerSubscriber,
         action_mailer: ActionMailerSubscriber,
         action_view: ActionViewSubscriber,
-        active_record: ActiveRecordSubscriber
+        active_record: ActiveRecordSubscriber,
+        active_job: ActiveJobSubscriber
       }.freeze
 
       SUBSCRIBER_BLACKLIST = [
         ActionController::LogSubscriber,
         ActionMailer::LogSubscriber,
         ActionView::LogSubscriber,
-        ActiveRecord::LogSubscriber
+        ActiveRecord::LogSubscriber,
+        ActiveJob::Logging::LogSubscriber
       ].freeze
 
       config.epilog = ActiveSupport::OrderedOptions.new
@@ -23,6 +25,7 @@ module Epilog
         action_mailer
         action_view
         active_record
+        active_job
       ]
 
       initializer 'epilog.configure' do |app|
