@@ -6,6 +6,8 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
   after { Timecop.return }
 
   describe EmptyController, type: :controller do
+    render_views
+
     it 'logs a normal GET request' do
       expect(Rails.logger.formatter).to receive(:call).with(
         'INFO',
@@ -152,6 +154,8 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
   end
 
   describe DataController, type: :controller do
+    render_views
+
     it 'logs a data response' do
       expect(Rails.logger.formatter).to receive(:call).with(
         'INFO',
@@ -258,6 +262,8 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
   end
 
   describe HaltController, type: :controller do
+    render_views
+
     it 'logs a halted request' do
       expect(Rails.logger.formatter).to receive(:call).with(
         'INFO',
