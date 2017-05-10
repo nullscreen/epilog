@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable BlockLength
 RSpec.describe Epilog::Filter::Blacklist do
   it 'hashes blacklisted keys' do
     filtered = described_class.new.call(good: 'hooray', password: 'secret')
@@ -27,6 +28,16 @@ RSpec.describe Epilog::Filter::Blacklist do
     filtered = described_class.new.call(PASSword: 'mypass')
     expect(filtered).to eq(
       PASSword: '[filtered String]'
+    )
+  end
+
+  it 'filters an array of hashes' do
+    filtered = described_class.new.call([{ password: 'pass' }, { pw: 'other' }])
+    expect(filtered).to eq(
+      [
+        { password: '[filtered String]' },
+        { pw: '[filtered String]' }
+      ]
     )
   end
 end
