@@ -31,7 +31,7 @@ module Epilog
         {
           message: message,
           job: job_hash(event.payload[:job]),
-          adapter: event.payload[:adapter].name
+          adapter: adapter_name(event.payload[:adapter])
         }
       end
 
@@ -47,6 +47,11 @@ module Epilog
 
       def format_time(time)
         Time.at(time).utc.strftime(Epilog::Formatter::DEFAULT_TIME_FORMAT)
+      end
+
+      def adapter_name(adapter)
+        adapter = adapter.class unless adapter.is_a?(Class)
+        adapter.name
       end
     end
   end
