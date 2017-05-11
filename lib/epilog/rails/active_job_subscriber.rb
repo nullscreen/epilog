@@ -19,7 +19,7 @@ module Epilog
         info do
           event_hash('Performed job', event).merge(
             metrics: {
-              job_runtime: event.duration.round(2)
+              job_runtime: event.duration
             }
           )
         end

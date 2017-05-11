@@ -20,7 +20,6 @@ Combustion.initialize! :all do
   config.action_controller.perform_caching = true
   config.cache_store = [:file_store, File.join(Rails.root, 'tmp/cache')]
 end
-require 'timecop'
 require 'epilog'
 require 'rspec/rails'
 

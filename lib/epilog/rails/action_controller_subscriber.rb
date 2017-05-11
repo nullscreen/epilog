@@ -20,7 +20,8 @@ module Epilog
             message: response_string(event),
             request: request_hash(event),
             response: response_hash(event),
-            metrics: event.payload[:metrics].merge(duration: event.duration)
+            metrics: event.payload[:metrics]
+              .merge(request_runtime: event.duration)
           }
         end
       end
@@ -115,7 +116,7 @@ module Epilog
       def basic_message(event, message)
         {
           message: message,
-          metrics: { duration: event.duration }
+          metrics: { event_duration: event.duration }
         }
       end
     end

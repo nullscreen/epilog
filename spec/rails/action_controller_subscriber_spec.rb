@@ -2,9 +2,6 @@
 
 # rubocop:disable Metrics/BlockLength
 RSpec.describe Epilog::Rails::ActionControllerSubscriber do
-  before { Timecop.freeze(Time.local(2017, 1, 10, 5, 0)) }
-  after { Timecop.return }
-
   describe EmptyController, type: :controller do
     render_views
 
@@ -41,7 +38,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
         metrics: {
           db_runtime: 0,
           view_runtime: be_within(10).of(10),
-          duration: be_within(1).of(0)
+          request_runtime: be_between(0, 10).exclusive
         }
       )
     end
@@ -53,7 +50,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[1][3]).to match(
         message: 'Unpermitted parameters: foo',
         metrics: {
-          duration: be_within(1).of(0)
+          event_duration: be_between(0, 10).exclusive
         }
       )
     end
@@ -67,7 +64,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[1][3]).to match(
         message: 'Redirect > https://www.google.com',
         metrics: {
-          duration: be_within(1).of(0)
+          event_duration: be_between(0, 10).exclusive
         }
       )
     end
@@ -83,7 +80,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[1][3]).to match(
         message: 'Sent data test.txt',
         metrics: {
-          duration: be_within(1).of(0)
+          event_duration: be_between(0, 10).exclusive
         }
       )
     end
@@ -99,7 +96,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[1][3]).to match(
         message: "Sent file #{filename}",
         metrics: {
-          duration: be_within(1).of(0)
+          event_duration: be_between(0, 10).exclusive
         }
       )
     end
@@ -115,7 +112,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[1][3]).to match(
         message: 'Filter chain halted as :halt rendered or redirected',
         metrics: {
-          duration: be_within(1).of(0)
+          event_duration: be_within(1).of(0)
         }
       )
     end
@@ -130,14 +127,14 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[3][3]).to match(
         message: start_with('read_fragment views/'),
         metrics: {
-          duration: be_within(1).of(0)
+          event_duration: be_between(0, 10).exclusive
         }
       )
 
       expect(Rails.logger[4][3]).to match(
         message: start_with('write_fragment views/'),
         metrics: {
-          duration: be_within(1).of(0)
+          event_duration: be_between(0, 10).exclusive
         }
       )
     end

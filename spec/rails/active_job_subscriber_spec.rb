@@ -13,9 +13,6 @@ end
 
 # rubocop: disable BlockLength
 RSpec.describe Epilog::Rails::ActiveJobSubscriber do
-  before { Timecop.freeze(Time.local(2017, 1, 10, 5, 0)) }
-  after { Timecop.return }
-
   it 'logs inline execution' do
     TestJob.perform_later
 
@@ -44,7 +41,7 @@ RSpec.describe Epilog::Rails::ActiveJobSubscriber do
       },
       adapter: 'ActiveJob::QueueAdapters::InlineAdapter',
       metrics: {
-        job_runtime: 0.0
+        job_runtime: be_between(0, 10).exclusive
       }
     )
 
