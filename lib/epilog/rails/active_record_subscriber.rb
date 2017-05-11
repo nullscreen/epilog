@@ -16,13 +16,17 @@ module Epilog
           message: payload[:name],
           sql: payload[:sql],
           binds: binds_info(payload[:binds]),
-          metrics: {
-            query_runtime: event.duration.round(2)
-          }
+          metrics: metrics(event)
         )
       end
 
       private
+
+      def metrics(event)
+        {
+          query_runtime: event.duration.round(2)
+        }
+      end
 
       def binds_info(binds)
         binds.map do |column, value|
