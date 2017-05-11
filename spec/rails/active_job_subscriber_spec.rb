@@ -13,14 +13,11 @@ end
 
 # rubocop: disable BlockLength
 RSpec.describe Epilog::Rails::ActiveJobSubscriber do
-  before { Timecop.freeze(Time.local(2017, 1, 10, 5, 0)) }
-  after { Timecop.return }
-
   it 'logs inline execution' do
-    expect(Rails.logger.formatter).to receive(:call).with(
-      'INFO',
-      Time.now,
-      'epilog',
+    TestJob.perform_later
+
+    expect(Rails.logger[0][0]).to eq('INFO')
+    expect(Rails.logger[0][3]).to match(
       message: 'Performing job',
       job: {
         class: 'TestJob',
@@ -32,10 +29,8 @@ RSpec.describe Epilog::Rails::ActiveJobSubscriber do
       adapter: 'ActiveJob::QueueAdapters::InlineAdapter'
     )
 
-    expect(Rails.logger.formatter).to receive(:call).with(
-      'INFO',
-      Time.now,
-      'epilog',
+    expect(Rails.logger[1][0]).to eq('INFO')
+    expect(Rails.logger[1][3]).to match(
       message: 'Performed job',
       job: {
         class: 'TestJob',
@@ -46,14 +41,12 @@ RSpec.describe Epilog::Rails::ActiveJobSubscriber do
       },
       adapter: 'ActiveJob::QueueAdapters::InlineAdapter',
       metrics: {
-        job_runtime: 0.0
+        job_runtime: be_between(0, 10).exclusive
       }
     )
 
-    expect(Rails.logger.formatter).to receive(:call).with(
-      'INFO',
-      Time.now,
-      'epilog',
+    expect(Rails.logger[2][0]).to eq('INFO')
+    expect(Rails.logger[2][3]).to match(
       message: 'Enqueued job',
       job: {
         class: 'TestJob',
@@ -64,6 +57,5 @@ RSpec.describe Epilog::Rails::ActiveJobSubscriber do
       },
       adapter: 'ActiveJob::QueueAdapters::InlineAdapter'
     )
-    TestJob.perform_later
   end
 end

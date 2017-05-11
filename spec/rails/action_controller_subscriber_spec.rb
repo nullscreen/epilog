@@ -2,21 +2,26 @@
 
 # rubocop:disable Metrics/BlockLength
 RSpec.describe Epilog::Rails::ActionControllerSubscriber do
-  before { Timecop.freeze(Time.local(2017, 1, 10, 5, 0)) }
-  after { Timecop.return }
-
   describe EmptyController, type: :controller do
     render_views
 
     it 'logs a normal GET request' do
-      expect(Rails.logger.formatter).to receive(:call).with(
-        'INFO',
-        Time.now,
-        'epilog',
+      get(:index)
+
+      expect(Rails.logger[0][0]).to eq('INFO')
+      expect(Rails.logger[0][3]).to match(
         message: 'GET /empty started',
         request: {
+          id: nil,
+          ip: '0.0.0.0',
+          host: 'test.host',
+          protocol: 'http',
           method: 'GET',
+          port: 80,
           path: '/empty',
+          query: {},
+          cookies: {},
+          headers: { 'HTTPS' => 'off' },
           params: {},
           format: :html,
           controller: 'EmptyController',
@@ -24,132 +29,49 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
         }
       )
 
-      expect(Rails.logger.formatter).to receive(:call).with(
-        'INFO',
-        Time.now,
-        'epilog',
+      expect(Rails.logger[1][0]).to eq('INFO')
+      expect(Rails.logger[1][3]).to match(
         message: 'GET /empty > 200 OK',
         request: {
+          id: nil,
           method: 'GET',
-          path: '/empty',
-          params: {},
-          format: :html,
-          controller: 'EmptyController',
-          action: 'index'
+          path: '/empty'
         },
         response: {
           status: 200
         },
         metrics: {
           db_runtime: 0,
-          view_runtime: be_within(10).of(10)
+          view_runtime: be_within(10).of(10),
+          request_runtime: be_between(0, 20).exclusive
         }
       )
-
-      get(:index)
     end
 
     it 'logs a request with unpermitted parameters' do
-      expect(Rails.logger.formatter).to receive(:call).with(
-        'INFO',
-        Time.now,
-        'epilog',
-        message: 'GET /empty?foo=bar started',
-        request: {
-          method: 'GET',
-          path: '/empty?foo=bar',
-          params: { 'foo' => 'bar' },
-          format: :html,
-          controller: 'EmptyController',
-          action: 'index'
-        }
-      )
+      get(:index, foo: 'bar')
 
-      expect(Rails.logger.formatter).to receive(:call).with(
-        'DEBUG',
-        Time.now,
-        'epilog',
+      expect(Rails.logger[1][0]).to eq('DEBUG')
+      expect(Rails.logger[1][3]).to match(
         message: 'Unpermitted parameters: foo',
         metrics: {
-          duration: be_within(1).of(0)
+          event_duration: be_between(0, 20).exclusive
         }
       )
-
-      expect(Rails.logger.formatter).to receive(:call).with(
-        'INFO',
-        Time.now,
-        'epilog',
-        message: 'GET /empty?foo=bar > 200 OK',
-        request: {
-          method: 'GET',
-          path: '/empty?foo=bar',
-          params: { 'foo' => 'bar' },
-          format: :html,
-          controller: 'EmptyController',
-          action: 'index'
-        },
-        response: {
-          status: 200
-        },
-        metrics: {
-          db_runtime: 0,
-          view_runtime: be_within(10).of(10)
-        }
-      )
-
-      get(:index, foo: 'bar')
     end
   end
 
   describe RedirectController, type: :controller do
     it 'logs a redirect response' do
-      expect(Rails.logger.formatter).to receive(:call).with(
-        'INFO',
-        Time.now,
-        'epilog',
-        message: 'GET /redirect started',
-        request: {
-          method: 'GET',
-          path: '/redirect',
-          params: {},
-          format: :html,
-          controller: 'RedirectController',
-          action: 'index'
-        }
-      )
+      get(:index)
 
-      expect(Rails.logger.formatter).to receive(:call).with(
-        'INFO',
-        Time.now,
-        'epilog',
+      expect(Rails.logger[1][0]).to eq('INFO')
+      expect(Rails.logger[1][3]).to match(
         message: 'Redirect > https://www.google.com',
         metrics: {
-          duration: be_within(1).of(0)
+          event_duration: be_between(0, 20).exclusive
         }
       )
-
-      expect(Rails.logger.formatter).to receive(:call).with(
-        'INFO',
-        Time.now,
-        'epilog',
-        message: 'GET /redirect > 302 Found',
-        request: {
-          method: 'GET',
-          path: '/redirect',
-          params: {},
-          format: :html,
-          controller: 'RedirectController',
-          action: 'index'
-        },
-        response: {
-          status: 302
-        },
-        metrics: {
-          db_runtime: 0
-        }
-      )
-
-      get(:index)
     end
   end
 
@@ -157,107 +79,31 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
     render_views
 
     it 'logs a data response' do
-      expect(Rails.logger.formatter).to receive(:call).with(
-        'INFO',
-        Time.now,
-        'epilog',
-        message: 'GET /data started',
-        request: {
-          method: 'GET',
-          path: '/data',
-          params: {},
-          format: :html,
-          controller: 'DataController',
-          action: 'index'
-        }
-      )
+      get(:index)
 
-      expect(Rails.logger.formatter).to receive(:call).with(
-        'INFO',
-        Time.now,
-        'epilog',
+      expect(Rails.logger[1][0]).to eq('INFO')
+      expect(Rails.logger[1][3]).to match(
         message: 'Sent data test.txt',
         metrics: {
-          duration: be_within(1).of(0)
+          event_duration: be_between(0, 20).exclusive
         }
       )
-
-      expect(Rails.logger.formatter).to receive(:call).with(
-        'INFO',
-        Time.now,
-        'epilog',
-        message: 'GET /data > 200 OK',
-        request: {
-          method: 'GET',
-          path: '/data',
-          params: {},
-          format: :html,
-          controller: 'DataController',
-          action: 'index'
-        },
-        response: {
-          status: 200
-        },
-        metrics: {
-          db_runtime: 0,
-          view_runtime: be_within(10).of(10)
-        }
-      )
-
-      get(:index)
     end
   end
 
   describe FileController, type: :controller do
     it 'logs a file response' do
-      expect(Rails.logger.formatter).to receive(:call).with(
-        'INFO',
-        Time.now,
-        'epilog',
-        message: 'GET /file started',
-        request: {
-          method: 'GET',
-          path: '/file',
-          params: {},
-          format: :html,
-          controller: 'FileController',
-          action: 'index'
-        }
-      )
-
       filename = File.join(Rails.root, 'public/test.txt')
-      expect(Rails.logger.formatter).to receive(:call).with(
-        'INFO',
-        Time.now,
-        'epilog',
-        message: "Sent file #{filename}",
-        metrics: {
-          duration: be_within(1).of(0)
-        }
-      )
-
-      expect(Rails.logger.formatter).to receive(:call).with(
-        'INFO',
-        Time.now,
-        'epilog',
-        message: 'GET /file > 200 OK',
-        request: {
-          method: 'GET',
-          path: '/file',
-          params: {},
-          format: :html,
-          controller: 'FileController',
-          action: 'index'
-        },
-        response: {
-          status: 200
-        },
-        metrics: {
-          db_runtime: 0
-        }
-      )
 
       get(:index)
+
+      expect(Rails.logger[1][0]).to eq('INFO')
+      expect(Rails.logger[1][3]).to match(
+        message: "Sent file #{filename}",
+        metrics: {
+          event_duration: be_between(0, 20).exclusive
+        }
+      )
     end
   end
 
@@ -265,54 +111,15 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
     render_views
 
     it 'logs a halted request' do
-      expect(Rails.logger.formatter).to receive(:call).with(
-        'INFO',
-        Time.now,
-        'epilog',
-        message: 'GET /halt started',
-        request: {
-          method: 'GET',
-          path: '/halt',
-          params: {},
-          format: :html,
-          controller: 'HaltController',
-          action: 'index'
-        }
-      )
+      get(:index)
 
-      expect(Rails.logger.formatter).to receive(:call).with(
-        'INFO',
-        Time.now,
-        'epilog',
+      expect(Rails.logger[1][0]).to eq('INFO')
+      expect(Rails.logger[1][3]).to match(
         message: 'Filter chain halted as :halt rendered or redirected',
         metrics: {
-          duration: be_within(1).of(0)
+          event_duration: be_within(1).of(0)
         }
       )
-
-      expect(Rails.logger.formatter).to receive(:call).with(
-        'INFO',
-        Time.now,
-        'epilog',
-        message: 'GET /halt > 200 OK',
-        request: {
-          method: 'GET',
-          path: '/halt',
-          params: {},
-          format: :html,
-          controller: 'HaltController',
-          action: 'index'
-        },
-        response: {
-          status: 200
-        },
-        metrics: {
-          db_runtime: 0,
-          view_runtime: be_within(10).of(10)
-        }
-      )
-
-      get(:index)
     end
   end
 
@@ -320,80 +127,21 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
     render_views
 
     it 'logs fragment caching in a request' do
-      expect(Rails.logger.formatter).to receive(:call).with(
-        'INFO',
-        Time.now,
-        'epilog',
-        message: 'GET /fragment started',
-        request: {
-          method: 'GET',
-          path: '/fragment',
-          params: {},
-          format: :html,
-          controller: 'FragmentController',
-          action: 'index'
-        }
-      )
+      get(:index)
 
-      expect(Rails.logger.formatter).to receive(:call).with(
-        'DEBUG',
-        Time.now,
-        'epilog',
-        '  Cache digest for app/views/fragment/index.html.erb: ' \
-          'a95025bad961ccf31e377774190b64af'
-      )
-
-      expect(Rails.logger.formatter).to receive(:call).with(
-        'DEBUG',
-        Time.now,
-        'epilog',
-        '  Cache digest for app/views/fragment/_partial.html.erb: ' \
-          '336d5ebc5436534e61d16e63ddfca327'
-      )
-
-      expect(Rails.logger.formatter).to receive(:call).with(
-        'DEBUG',
-        Time.now,
-        'epilog',
+      expect(Rails.logger[3][3]).to match(
         message: start_with('read_fragment views/'),
         metrics: {
-          duration: be_within(1).of(0)
+          event_duration: be_between(0, 20).exclusive
         }
       )
 
-      expect(Rails.logger.formatter).to receive(:call).with(
-        'DEBUG',
-        Time.now,
-        'epilog',
+      expect(Rails.logger[4][3]).to match(
         message: start_with('write_fragment views/'),
         metrics: {
-          duration: be_within(1).of(0)
+          event_duration: be_between(0, 20).exclusive
         }
       )
-
-      expect(Rails.logger.formatter).to receive(:call).with(
-        'INFO',
-        Time.now,
-        'epilog',
-        message: 'GET /fragment > 200 OK',
-        request: {
-          method: 'GET',
-          path: '/fragment',
-          params: {},
-          format: :html,
-          controller: 'FragmentController',
-          action: 'index'
-        },
-        response: {
-          status: 200
-        },
-        metrics: {
-          db_runtime: 0,
-          view_runtime: be_within(10).of(10)
-        }
-      )
-
-      get(:index)
     end
   end
 end

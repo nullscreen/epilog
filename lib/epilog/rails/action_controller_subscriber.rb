@@ -1,32 +1,36 @@
 # frozen_string_literal: true
 
+# rubocop:disable ClassLength
 module Epilog
   module Rails
     class ActionControllerSubscriber < LogSubscriber
       RAILS_PARAMS = %i[controller action format _method only_path].freeze
-      RESPONSE_STATS = %i[db_runtime view_runtime].freeze
 
-      def start_processing(event)
+      def request_received(event)
         info do
           {
-            message: "#{event.payload[:method]} " \
-              "#{event.payload[:path]} started",
-            request: request(event)
+            message: "#{request_string(event)} started",
+            request: request_hash(event)
           }
         end
       end
 
-      def process_action(event)
+      def process_request(event)
         info do
-          status = normalize_status(event.payload[:status], event)
           {
-            message: "#{event.payload[:method]} #{event.payload[:path]} > " \
-              "#{status} #{Rack::Utils::HTTP_STATUS_CODES[status]}",
-            request: request(event),
-            response: { status: status },
-            metrics: response_metrics(event)
+            message: response_string(event),
+            request: short_request_hash(event),
+            response: response_hash(event),
+            metrics: process_metrics(event.payload[:metrics]
+              .merge(request_runtime: event.duration.round(2)))
           }
         end
+      end
+
+      def start_processing(*)
+      end
+
+      def process_action(*)
       end
 
       def send_data(event)
@@ -73,21 +77,55 @@ module Epilog
 
       private
 
-      def request(event)
-        payload = event.payload
-
+      def request_hash(event) # rubocop:disable AbcSize, MethodLength
+        request = event.payload[:request]
         {
-          method: payload[:method],
-          path: payload[:path],
-          params: payload[:params].except(*RAILS_PARAMS),
-          format: payload[:format],
-          controller: payload[:controller],
-          action: payload[:action]
+          id: request.uuid,
+          ip: request.remote_ip,
+          host: request.host,
+          protocol: request.protocol.to_s.gsub('://', ''),
+          method: request.request_method,
+          port: request.port,
+          path: request.fullpath,
+          query: request.query_parameters,
+          cookies: request.cookies,
+          headers: request.headers.to_h.keep_if do |key, _value|
+            key =~ ActionDispatch::Http::Headers::HTTP_HEADER
+          end,
+          params: request.filtered_parameters.except(*RAILS_PARAMS),
+          format: request.format.try(:ref),
+          controller: event.payload[:controller],
+          action: event.payload[:action]
         }
       end
 
-      def normalize_status(status, event)
+      def short_request_hash(event)
+        request = event.payload[:request]
+        {
+          id: request.uuid,
+          method: request.method,
+          path: request.fullpath
+        }
+      end
+
+      def request_string(event)
+        request = event.payload[:request]
+        "#{request.request_method} #{request.fullpath}"
+      end
+
+      def response_hash(event)
+        { status: normalize_status(event) }
+      end
+
+      def response_string(event)
+        status = normalize_status(event)
+        status_string = Rack::Utils::HTTP_STATUS_CODES[status]
+        "#{request_string(event)} > #{status} #{status_string}"
+      end
+
+      def normalize_status(event)
         payload = event.payload
+        status = payload[:response].status
         if status.nil? && payload[:exception].present?
           status = ActionDispatch::ExceptionWrapper
             .status_code_for_exception(payload[:exception].first)
@@ -95,18 +133,18 @@ module Epilog
         status
       end
 
-      def response_metrics(event)
-        payload = event.payload
-        RESPONSE_STATS.each_with_object({}) do |stat, metrics|
-          metrics[stat] = payload[stat] if payload[stat]
-        end
-      end
-
       def basic_message(event, message)
         {
           message: message,
-          metrics: { duration: event.duration }
+          metrics: process_metrics(event_duration: event.duration)
         }
+      end
+
+      def process_metrics(metrics)
+        metrics.each_with_object({}) do |(key, value), obj|
+          next if value.nil?
+          obj[key] = value.round(2) if value.is_a?(Numeric)
+        end
       end
     end
   end
