@@ -14,7 +14,7 @@ require 'combustion'
 
 Combustion.path = 'spec/rails_app'
 Combustion.initialize! :all do
-  config.logger = Epilog::Logger.new($stdout)
+  config.logger = Epilog::MockLogger.new
   config.logger.progname = 'epilog'
   config.log_level = :debug
   config.action_controller.perform_caching = true
@@ -38,6 +38,7 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = true
 
   config.after do
+    Rails.logger.reset
     FileUtils.rm_rf(File.join(Rails.root, 'tmp'))
   end
 end
