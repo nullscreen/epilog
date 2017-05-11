@@ -12,8 +12,16 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[0][3]).to match(
         message: 'GET /empty started',
         request: {
+          id: nil,
+          ip: '0.0.0.0',
+          host: 'test.host',
+          protocol: 'http',
           method: 'GET',
+          port: 80,
           path: '/empty',
+          query: {},
+          cookies: {},
+          headers: { 'HTTPS' => 'off' },
           params: {},
           format: :html,
           controller: 'EmptyController',
@@ -25,12 +33,9 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[1][3]).to match(
         message: 'GET /empty > 200 OK',
         request: {
+          id: nil,
           method: 'GET',
-          path: '/empty',
-          params: {},
-          format: :html,
-          controller: 'EmptyController',
-          action: 'index'
+          path: '/empty'
         },
         response: {
           status: 200
@@ -38,7 +43,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
         metrics: {
           db_runtime: 0,
           view_runtime: be_within(10).of(10),
-          request_runtime: be_between(0, 10).exclusive
+          request_runtime: be_between(0, 20).exclusive
         }
       )
     end
@@ -50,7 +55,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[1][3]).to match(
         message: 'Unpermitted parameters: foo',
         metrics: {
-          event_duration: be_between(0, 10).exclusive
+          event_duration: be_between(0, 20).exclusive
         }
       )
     end
@@ -64,7 +69,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[1][3]).to match(
         message: 'Redirect > https://www.google.com',
         metrics: {
-          event_duration: be_between(0, 10).exclusive
+          event_duration: be_between(0, 20).exclusive
         }
       )
     end
@@ -80,7 +85,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[1][3]).to match(
         message: 'Sent data test.txt',
         metrics: {
-          event_duration: be_between(0, 10).exclusive
+          event_duration: be_between(0, 20).exclusive
         }
       )
     end
@@ -96,7 +101,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[1][3]).to match(
         message: "Sent file #{filename}",
         metrics: {
-          event_duration: be_between(0, 10).exclusive
+          event_duration: be_between(0, 20).exclusive
         }
       )
     end
@@ -127,14 +132,14 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[3][3]).to match(
         message: start_with('read_fragment views/'),
         metrics: {
-          event_duration: be_between(0, 10).exclusive
+          event_duration: be_between(0, 20).exclusive
         }
       )
 
       expect(Rails.logger[4][3]).to match(
         message: start_with('write_fragment views/'),
         metrics: {
-          event_duration: be_between(0, 10).exclusive
+          event_duration: be_between(0, 20).exclusive
         }
       )
     end

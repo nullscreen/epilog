@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable ClassLength
 module Epilog
   module Rails
     class ActionControllerSubscriber < LogSubscriber
@@ -18,10 +19,10 @@ module Epilog
         info do
           {
             message: response_string(event),
-            request: request_hash(event),
+            request: short_request_hash(event),
             response: response_hash(event),
-            metrics: event.payload[:metrics]
-              .merge(request_runtime: event.duration)
+            metrics: process_metrics(event.payload[:metrics]
+              .merge(request_runtime: event.duration.round(2)))
           }
         end
       end
@@ -76,15 +77,34 @@ module Epilog
 
       private
 
-      def request_hash(event)
+      def request_hash(event) # rubocop:disable AbcSize, MethodLength
         request = event.payload[:request]
         {
+          id: request.uuid,
+          ip: request.remote_ip,
+          host: request.host,
+          protocol: request.protocol.to_s.gsub('://', ''),
           method: request.request_method,
+          port: request.port,
           path: request.fullpath,
+          query: request.query_parameters,
+          cookies: request.cookies,
+          headers: request.headers.to_h.keep_if do |key, _value|
+            key =~ ActionDispatch::Http::Headers::HTTP_HEADER
+          end,
           params: request.filtered_parameters.except(*RAILS_PARAMS),
           format: request.format.try(:ref),
           controller: event.payload[:controller],
           action: event.payload[:action]
+        }
+      end
+
+      def short_request_hash(event)
+        request = event.payload[:request]
+        {
+          id: request.uuid,
+          method: request.method,
+          path: request.fullpath
         }
       end
 
@@ -116,8 +136,15 @@ module Epilog
       def basic_message(event, message)
         {
           message: message,
-          metrics: { event_duration: event.duration }
+          metrics: process_metrics(event_duration: event.duration)
         }
+      end
+
+      def process_metrics(metrics)
+        metrics.each_with_object({}) do |(key, value), obj|
+          next if value.nil?
+          obj[key] = value.round(2) if value.is_a?(Numeric)
+        end
       end
     end
   end

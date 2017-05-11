@@ -37,7 +37,7 @@ module Epilog
       {
         db_runtime: ActiveRecord::RuntimeRegistry.sql_runtime,
         view_runtime: view_runtime
-      }.keep_if { |_k, v| !v.nil? }
+      }
     end
   end
 end
