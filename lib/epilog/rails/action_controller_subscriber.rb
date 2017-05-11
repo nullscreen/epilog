@@ -7,9 +7,8 @@ module Epilog
 
       def request_received(event)
         info do
-          request = event.payload[:request]
           {
-            message: "#{request.request_method} #{request.fullpath} started",
+            message: "#{request_string(event)} started",
             request: request_hash(event)
           }
         end
@@ -17,14 +16,11 @@ module Epilog
 
       def process_request(event)
         info do
-          request = event.payload[:request]
-          status = normalize_status(event)
           {
-            message: "#{request.request_method} #{request.fullpath} > " \
-              "#{status} #{Rack::Utils::HTTP_STATUS_CODES[status]}",
+            message: response_string(event),
             request: request_hash(event),
             response: response_hash(event),
-            metrics: event.payload[:metrics]
+            metrics: event.payload[:metrics].merge(duration: event.duration)
           }
         end
       end
@@ -91,10 +87,19 @@ module Epilog
         }
       end
 
+      def request_string(event)
+        request = event.payload[:request]
+        "#{request.request_method} #{request.fullpath}"
+      end
+
       def response_hash(event)
-        {
-          status: normalize_status(event)
-        }
+        { status: normalize_status(event) }
+      end
+
+      def response_string(event)
+        status = normalize_status(event)
+        status_string = Rack::Utils::HTTP_STATUS_CODES[status]
+        "#{request_string(event)} > #{status} #{status_string}"
       end
 
       def normalize_status(event)

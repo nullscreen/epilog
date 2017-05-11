@@ -42,7 +42,8 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
         },
         metrics: {
           db_runtime: 0,
-          view_runtime: be_within(10).of(10)
+          view_runtime: be_within(10).of(10),
+          duration: be_within(1).of(0)
         }
       )
 
@@ -93,7 +94,8 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
         },
         metrics: {
           db_runtime: 0,
-          view_runtime: be_within(10).of(10)
+          view_runtime: be_within(10).of(10),
+          duration: be_within(1).of(0)
         }
       )
 
@@ -145,7 +147,8 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
           status: 302
         },
         metrics: {
-          db_runtime: 0
+          db_runtime: 0,
+          duration: be_within(1).of(0)
         }
       )
 
@@ -200,7 +203,8 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
         },
         metrics: {
           db_runtime: 0,
-          view_runtime: be_within(10).of(10)
+          view_runtime: be_within(10).of(10),
+          duration: be_within(1).of(0)
         }
       )
 
@@ -253,7 +257,8 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
           status: 200
         },
         metrics: {
-          db_runtime: 0
+          db_runtime: 0,
+          duration: be_within(1).of(0)
         }
       )
 
@@ -308,7 +313,8 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
         },
         metrics: {
           db_runtime: 0,
-          view_runtime: be_within(10).of(10)
+          view_runtime: be_within(10).of(10),
+          duration: be_within(1).of(0)
         }
       )
 
@@ -389,7 +395,8 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
         },
         metrics: {
           db_runtime: 0,
-          view_runtime: be_within(10).of(10)
+          view_runtime: be_within(10).of(10),
+          duration: be_within(1).of(0)
         }
       )
 

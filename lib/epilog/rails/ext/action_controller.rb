@@ -3,32 +3,37 @@
 module Epilog
   module ActionControllerExt
     def process_action(*)
-      ActiveSupport::Notifications.instrument(
-        'request_received.action_controller',
-        controller: self.class.name,
-        action: action_name,
-        request: request
-      )
+      epilog_instrument('request_received')
+      epilog_instrument('process_request') do |payload|
+        begin
+          super
+        ensure
+          payload[:response] = response
+          payload[:metrics] = epilog_metrics
+        end
+      end
+    end
 
-      process_payload = {
+    private
+
+    def epilog_instrument(name, &block)
+      ActiveSupport::Notifications.instrument(
+        "#{name}.action_controller",
+        epilog_payload,
+        &block
+      )
+    end
+
+    def epilog_payload
+      {
         request: request,
         response: response,
         controller: self.class.name,
         action: action_name
       }
-      ActiveSupport::Notifications.instrument(
-        'process_request.action_controller',
-        process_payload
-      ) do
-        begin
-          super
-        ensure
-          process_payload[:metrics] = metrics
-        end
-      end
     end
 
-    def metrics
+    def epilog_metrics
       {
         db_runtime: ActiveRecord::RuntimeRegistry.sql_runtime,
         view_runtime: view_runtime
