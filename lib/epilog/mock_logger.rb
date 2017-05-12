@@ -30,11 +30,11 @@ module Epilog
     end
 
     def [](index)
-      @logs[index].dup
+      @logs[index].dup || []
     end
 
     def to_a
-      @logs.size.times { |i| self[i] }
+      (0...@logs.size).map { |i| self[i] }
     end
 
     def freeze_time(time)
