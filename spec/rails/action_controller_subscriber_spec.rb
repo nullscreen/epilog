@@ -29,8 +29,8 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
         }
       )
 
-      expect(Rails.logger[1][0]).to eq('INFO')
-      expect(Rails.logger[1][3]).to match(
+      expect(Rails.logger[2][0]).to eq('INFO')
+      expect(Rails.logger[2][3]).to match(
         message: 'GET /empty > 200 OK',
         request: {
           id: nil,
@@ -81,8 +81,8 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
     it 'logs a data response' do
       get(:index)
 
-      expect(Rails.logger[1][0]).to eq('INFO')
-      expect(Rails.logger[1][3]).to match(
+      expect(Rails.logger[2][0]).to eq('INFO')
+      expect(Rails.logger[2][3]).to match(
         message: 'Sent data test.txt',
         metrics: {
           duration: be_between(0, 20)
@@ -113,8 +113,8 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
     it 'logs a halted request' do
       get(:index)
 
-      expect(Rails.logger[1][0]).to eq('INFO')
-      expect(Rails.logger[1][3]).to match(
+      expect(Rails.logger[2][0]).to eq('INFO')
+      expect(Rails.logger[2][3]).to match(
         message: 'Filter chain halted as :halt rendered or redirected',
         metrics: {
           duration: be_within(1).of(0)
@@ -136,7 +136,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
         }
       )
 
-      expect(Rails.logger[4][3]).to match(
+      expect(Rails.logger[5][3]).to match(
         message: start_with('write_fragment views/'),
         metrics: {
           duration: be_between(0, 20)
