@@ -41,8 +41,11 @@ RSpec.configure do |config|
 
   config.disable_monkey_patching!
 
-  config.after do
+  config.before do
     Rails.logger.reset
+  end
+
+  config.after do
     FileUtils.rm_rf(File.join(Rails.root, 'tmp'))
   end
 end
