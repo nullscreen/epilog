@@ -12,6 +12,10 @@ end
 
 require 'combustion'
 
+# Silence initialization
+@orig_stdout = $stdout
+$stdout = File.open(File::NULL, 'w')
+
 Combustion.path = 'spec/rails_app'
 Combustion.initialize! :all do
   config.logger = Epilog::MockLogger.new
@@ -20,6 +24,9 @@ Combustion.initialize! :all do
   config.action_controller.perform_caching = true
   config.cache_store = [:file_store, File.join(Rails.root, 'tmp/cache')]
 end
+
+$stdout = @orig_stdout
+
 require 'epilog'
 require 'rspec/rails'
 
@@ -33,8 +40,6 @@ RSpec.configure do |config|
   end
 
   config.disable_monkey_patching!
-
-  config.use_transactional_fixtures = true
 
   config.after do
     Rails.logger.reset

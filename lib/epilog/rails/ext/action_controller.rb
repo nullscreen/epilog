@@ -35,7 +35,7 @@ module Epilog
 
     def epilog_metrics
       {
-        db_runtime: ActiveRecord::RuntimeRegistry.sql_runtime,
+        db_runtime: try(:db_runtime),
         view_runtime: view_runtime
       }
     end
