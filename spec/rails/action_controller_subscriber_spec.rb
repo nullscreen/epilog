@@ -55,7 +55,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[1][3]).to match(
         message: 'Unpermitted parameters: foo',
         metrics: {
-          event_duration: be_between(0, 20)
+          duration: be_between(0, 20)
         }
       )
     end
@@ -69,7 +69,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[1][3]).to match(
         message: 'Redirect > https://www.google.com',
         metrics: {
-          event_duration: be_between(0, 20)
+          duration: be_between(0, 20)
         }
       )
     end
@@ -85,7 +85,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[1][3]).to match(
         message: 'Sent data test.txt',
         metrics: {
-          event_duration: be_between(0, 20)
+          duration: be_between(0, 20)
         }
       )
     end
@@ -101,7 +101,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[1][3]).to match(
         message: "Sent file #{filename}",
         metrics: {
-          event_duration: be_between(0, 20)
+          duration: be_between(0, 20)
         }
       )
     end
@@ -117,7 +117,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[1][3]).to match(
         message: 'Filter chain halted as :halt rendered or redirected',
         metrics: {
-          event_duration: be_within(1).of(0)
+          duration: be_within(1).of(0)
         }
       )
     end
@@ -132,14 +132,14 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[3][3]).to match(
         message: start_with('read_fragment views/'),
         metrics: {
-          event_duration: be_between(0, 20)
+          duration: be_between(0, 20)
         }
       )
 
       expect(Rails.logger[4][3]).to match(
         message: start_with('write_fragment views/'),
         metrics: {
-          event_duration: be_between(0, 20)
+          duration: be_between(0, 20)
         }
       )
     end

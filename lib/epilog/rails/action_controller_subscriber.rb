@@ -136,7 +136,7 @@ module Epilog
       def basic_message(event, message)
         {
           message: message,
-          metrics: process_metrics(event_duration: event.duration)
+          metrics: process_metrics(duration: event.duration)
         }
       end
 
