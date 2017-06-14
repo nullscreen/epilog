@@ -13,6 +13,7 @@ require 'epilog/rails/ext/rack_logger'
 require 'epilog/rails/ext/action_controller'
 require 'epilog/rails/ext/debug_exceptions'
 
+require 'epilog/rails/epilog_ext'
 require 'epilog/rails/log_subscriber'
 require 'epilog/rails/action_controller_subscriber'
 require 'epilog/rails/action_mailer_subscriber'
