@@ -41,3 +41,4 @@ RSpec.describe Epilog::Rails::ActionMailerSubscriber, type: :controller do
     )
   end
 end
+# rubocop:enable BlockLength

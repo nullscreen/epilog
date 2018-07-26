@@ -59,3 +59,4 @@ RSpec.describe Epilog::Rails::ActiveJobSubscriber do
     )
   end
 end
+# rubocop:enable BlockLength
