@@ -41,3 +41,4 @@ RSpec.describe Epilog::Filter::Blacklist do
     )
   end
 end
+# rubocop:enable BlockLength

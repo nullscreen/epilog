@@ -149,3 +149,4 @@ module Epilog
     end
   end
 end
+# rubocop:enable ClassLength

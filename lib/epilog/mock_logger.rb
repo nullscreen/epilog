@@ -24,6 +24,7 @@ module Epilog
 
       write(format_severity(severity), current_time, prog, message)
     end
+    # rubocop:enable MethodLength
     alias log add
 
     def reopen(_logdev = nil)

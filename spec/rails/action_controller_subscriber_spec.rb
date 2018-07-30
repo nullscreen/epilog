@@ -145,3 +145,4 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength
