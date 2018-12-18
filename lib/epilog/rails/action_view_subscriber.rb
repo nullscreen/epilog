@@ -30,6 +30,7 @@ module Epilog
 
       def fix_path(template)
         return if template.nil?
+
         base = File.join(::Rails.root, 'app', 'views', '')
         pattern = /^#{Regexp.escape(base)}/
         template.gsub(pattern, '')

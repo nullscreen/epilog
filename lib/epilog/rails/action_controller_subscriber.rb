@@ -143,6 +143,7 @@ module Epilog
       def process_metrics(metrics)
         metrics.each_with_object({}) do |(key, value), obj|
           next if value.nil?
+
           obj[key] = value.round(2) if value.is_a?(Numeric)
         end
       end

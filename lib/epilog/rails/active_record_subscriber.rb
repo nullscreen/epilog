@@ -9,6 +9,7 @@ module Epilog
         ActiveRecord::LogSubscriber.runtime += event.duration
 
         return unless logger.debug?
+
         payload = event.payload
         return if IGNORE_PAYLOAD_NAMES.include?(payload[:name])
 

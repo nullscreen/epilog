@@ -45,6 +45,7 @@ module Epilog
     def message(msg)
       return { message: msg.message, exception: msg } if msg.is_a?(Exception)
       return msg.to_h if msg.respond_to?(:to_h)
+
       { message: msg.to_s }
     end
 
