@@ -29,7 +29,7 @@ RSpec.describe Epilog::Rails::ActionMailerSubscriber, type: :controller do
   end
 
   it 'logs receiving mail' do
-    TestMailer.receive('test mail')
+    TestMailer.receive(Mail.new(body: 'test mail').to_s)
 
     expect(Rails.logger[0][0]).to eq('INFO')
     expect(Rails.logger[0][3]).to match(
