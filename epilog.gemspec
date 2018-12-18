@@ -9,6 +9,7 @@ Gem::Specification.new do |spec|
   spec.version = Epilog::VERSION
   spec.authors = ['Justin Howard']
   spec.email = ['jmhoward0@gmail.com']
+  spec.license = 'Apache-2.0'
 
   spec.summary = 'A JSON logger with Rails support'
   spec.homepage = 'https://github.com/machinima/epilog'
