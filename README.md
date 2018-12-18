@@ -8,6 +8,13 @@
 
 A JSON logger with Rails support.
 
+## Documentation
+
+Read below to get started, or see the [API Documentation][api-docs] for more
+details.
+
+[api-docs]: https://www.rubydoc.info/github/machinima/epilog
+
 ## Installation
 
 Add this line to your application's `Gemfile`:
