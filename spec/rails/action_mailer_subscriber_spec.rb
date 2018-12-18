@@ -13,7 +13,7 @@ RSpec.describe Epilog::Rails::ActionMailerSubscriber, type: :controller do
       action: :test,
       mailer: 'TestMailer',
       metrics: {
-        duration: be_between(0, 200)
+        duration: be_between(0, 500)
       }
     )
 
