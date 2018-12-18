@@ -13,7 +13,7 @@ A JSON logger with Rails support.
 Add this line to your application's `Gemfile`:
 
 ```ruby
-gem 'epilog', git: 'git@bitbucket.org:machinima-dev/epilog.git', tag: 'v0.1.2'
+gem 'epilog'
 ```
 
 ## Basic Usage
@@ -43,8 +43,8 @@ experiment.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on BitBucket at
-https://bitbucket.com/machinima-dev/epilog.
+Bug reports and pull requests are welcome on GitHub at
+https://github.com/machinima/epilog.
 
 ## License
 
