@@ -2,6 +2,10 @@
 
 # rubocop:disable Metrics/BlockLength
 RSpec.describe Epilog::Rails::ActionControllerSubscriber do
+  def params(values)
+    Rails::VERSION::MAJOR >= 5 ? { params: values } : values
+  end
+
   describe EmptyController, type: :controller do
     render_views
 
@@ -49,7 +53,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
     end
 
     it 'logs a request with unpermitted parameters' do
-      get(:index, foo: 'bar')
+      get(:index, params(foo: 'bar'))
 
       expect(Rails.logger[1][0]).to eq('DEBUG')
       expect(Rails.logger[1][3]).to match(
@@ -129,14 +133,20 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
     it 'logs fragment caching in a request' do
       get(:index)
 
-      expect(Rails.logger[3][3]).to match(
+      logs = Rails.logger.to_a.select do |l|
+        next unless l[3].is_a?(Hash)
+
+        l[3][:message].match(/(read|write)_fragment/)
+      end
+
+      expect(logs[0][3]).to match(
         message: start_with('read_fragment views/'),
         metrics: {
           duration: be_between(0, 20)
         }
       )
 
-      expect(Rails.logger[5][3]).to match(
+      expect(logs[1][3]).to match(
         message: start_with('write_fragment views/'),
         metrics: {
           duration: be_between(0, 20)

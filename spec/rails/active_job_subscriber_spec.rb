@@ -2,6 +2,7 @@
 
 class TestJob < ActiveJob::Base
   queue_as 'test-queue'
+  self.queue_adapter = :inline
 
   def perform
   end

@@ -3,6 +3,6 @@
 class EmptyController < ActionController::Base
   def index
     params.permit(:id)
-    render text: ''
+    render plain: ''
   end
 end

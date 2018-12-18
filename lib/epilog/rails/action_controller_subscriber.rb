@@ -70,8 +70,8 @@ module Epilog
         define_method(method) do |event|
           return unless logger.info?
 
-          debug(basic_message(event, "#{method} " \
-            "#{event.payload[:key] || event.payload[:path]}"))
+          path = Array(event.payload[:key] || event.payload[:path]).join('/')
+          debug(basic_message(event, "#{method} #{path}"))
         end
       end
 

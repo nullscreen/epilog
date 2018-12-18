@@ -9,6 +9,6 @@ class HaltController < ActionController::Base
   private
 
   def halt
-    render text: ''
+    render plain: ''
   end
 end
