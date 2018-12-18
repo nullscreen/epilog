@@ -1,5 +1,11 @@
 # Epilog Gem
 
+[![Gem Version](https://badge.fury.io/rb/epilog.svg)](https://badge.fury.io/rb/epilog)
+[![Build Status](https://travis-ci.org/machinima/epilog.svg?branch=master)](https://travis-ci.org/machinima/epilog)
+[![Code Climate](https://codeclimate.com/github/machinima/epilog/badges/gpa.svg)](https://codeclimate.com/github/machinima/epilog)
+[![Test Coverage](https://codeclimate.com/github/machinima/epilog/badges/coverage.svg)](https://codeclimate.com/github/machinima/epilog)
+[![Inline docs](http://inch-ci.org/github/machinima/epilog.svg?branch=master)](http://inch-ci.org/github/machinima/epilog)
+
 A JSON logger with Rails support.
 
 ## Installation
