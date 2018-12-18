@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class HaltController < ActionController::Base
-  before_filter :halt
+  before_action :halt
 
   def index
   end
