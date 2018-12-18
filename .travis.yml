@@ -1,0 +1,40 @@
+---
+language: ruby
+rvm:
+  - 2.3
+  - 2.4
+  - 2.5
+env:
+  matrix:
+    - RAILS_VERSION=4.2
+    - RAILS_VERSION=5.2
+  global:
+    - COVERAGE=1
+    - secure: 'ZVxUWgGa1tlRWTxT8zj8ca8ZTKMIZk7YTTM3BJTPev1y3PvGy4UXr+18Iwmzq0Vv329SvZNy1Y4bxE/UUgiH9ZaYlw/DlC/zpKr+um/Gmblu9jvdq44iUMJLhu4xA6q8EvHxKZ9NY9xzmu3BC2N1FTUN+g0OlqQJ1oGWRPmQa2hxc/eMdbgG2TqtH7WaTvD3mPV2iv7uWfLOB9ZQu9BFPy4spfasBmXRIkbJSGG8wG/z5JCdvpTTLCVvp3At/dy2NzjjDUjHF+Greweu7CYg5zXFsfBW/PGzJEoM9gIYCZxR90033KeAbaiATEI+b0SBC3kt2ej9nbJRpTRTf5Evonu0lgXnhpBrI7AZWqNPkSbYDJUL+gj8ZJv4cpWfHk2TcYB6VXPNoYV/md5a2zJbCl3E2mlnLEs9fhDF9ssnapi02++CcODmH4yBoD4aM8U37+F4XGglyn1I/0TiE8OT1GBnb7FJbc68+9+cgWqLs29M/V/tsb1ef3bE9YH5HqBzRz+6WUjIiOAiYQy5ZvLaH9ZmMpE2Ek5ut3PTdY+ghDToVkSPJ2wXLMriw0gjfQC9MWH21Qud92kmhim/OcmLJfnmcCmjOftmbDyWZDSriZHBx5ixe1FfOhL/2T9s3LqJGikznkubyJQ0rEB0u872+edzyFB8CX4X2Zozb0qcK9w='
+
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
+script:
+  - bin/rubocop
+  - bin/rspec --format doc
+  - bin/check-version
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+
+jobs:
+  include:
+    - stage: release
+      rvm: 2.3
+      script: skip
+      deploy:
+        provider: rubygems
+        api_key:
+          secure: 'tu+TzDHhiKVy5EeiMb8NVb/EHSflqhAhie6OFJc72nBBFAF9mow71sFpOzleQJ0gNdKnrWf17AQZLO9UQLIY2gP6fOHrLfDO5yLBMEpMjoqZISSBtugNUNCf8vg37QWbG6mAzMM67I/dMqT7U9KgL8CwaUwrs75W4KmIoaYqzkjiLc++k9j9dKpdbBBCEp0KNNbuAfEc9YWoas45LWFR1VfqB0CaGX4z8kWZai+N+8JLsmEO2bK6bPp2wtE+5ofXdkr5vSZK9Sp/7vLmh7P/D6ZDvuaF8KPt3wuPdtS1ZebuGWLsExcTTIgXzWBcYQ3hSHpvOwLWhI0M8ZpxmO3PPZO8+LsAzBijCj1HyOaXIrIybebuapvRixjWEV6mk3UXpBWgS3u0dslfbYa9hzbKCtAN/MTDSwLkdSuxsTuonNd406QQvX9O+yNT5+N8QpBqlAONeurSZhIRioiIyAwu6fL1CIJ5muDPaqG/V+dCh+z3W5KqnKgr9dY/bN8XizQoZhEFPg8WUjG2/ZRwtw3u5BD1rCbJIt3tAUSwhLLoSQFkH1f07evOuArOzaJjmehdaOiERkzsVmip65F/Bt+03NYShNzw3qK416ZjoxvVXpgb+mHVB8TEHL11bmvnrJ/v//fRp2W0ClHDZBmHvuem3UIXb7vnDDtvn8HClNHlgkg='
+        gem: epilog
+        on:
+          tags: true
+          repo: machinima/epilog
