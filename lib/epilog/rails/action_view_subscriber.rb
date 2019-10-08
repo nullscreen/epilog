@@ -4,15 +4,15 @@ module Epilog
   module Rails
     class ActionViewSubscriber < LogSubscriber
       def render_template(event)
-        info { hash(event, 'Rendered template') }
+        debug { hash(event, 'Rendered template') }
       end
 
       def render_partial(event)
-        info { hash(event, 'Rendered partial') }
+        debug { hash(event, 'Rendered partial') }
       end
 
       def render_collection(event)
-        info { hash(event, 'Rendered collection') }
+        debug { hash(event, 'Rendered collection') }
       end
 
       private
