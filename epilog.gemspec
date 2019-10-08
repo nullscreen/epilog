@@ -19,16 +19,17 @@ Gem::Specification.new do |spec|
     .reject { |f| f.match(%r{^spec/}) }
   spec.require_paths = ['lib']
 
-  spec.add_development_dependency 'bundler', '~> 1.12'
-  spec.add_development_dependency 'byebug', '~> 9.0'
-  spec.add_development_dependency 'combustion', '~> 1.0.0'
+  spec.add_development_dependency 'bundler', '>= 1.12'
+  spec.add_development_dependency 'byebug', '~> 11.0'
+  spec.add_development_dependency 'combustion', '~> 1.1.0'
+  spec.add_development_dependency 'irb'
   spec.add_development_dependency 'rails', '>= 4.2', '< 6'
-  spec.add_development_dependency 'rake', '~> 10.0'
-  spec.add_development_dependency 'redcarpet', '~> 3.4'
+  spec.add_development_dependency 'rake', '~> 13.0'
+  spec.add_development_dependency 'redcarpet', '~> 3.5'
   spec.add_development_dependency 'rspec', '~> 3.4'
   spec.add_development_dependency 'rspec-rails', '~> 3.8.1'
-  spec.add_development_dependency 'rubocop', '~> 0.61'
-  spec.add_development_dependency 'simplecov', '~> 0.12'
-  spec.add_development_dependency 'sqlite3', '~> 1.3'
+  spec.add_development_dependency 'rubocop', '0.75'
+  spec.add_development_dependency 'simplecov', '~> 0.17'
+  spec.add_development_dependency 'sqlite3', '~> 1.3', '< 1.4'
   spec.add_development_dependency 'yard', '~> 0.9.11'
 end

@@ -2,23 +2,29 @@
 AllCops:
   TargetRubyVersion: 2.3
 
+Layout/AlignArguments:
+  EnforcedStyle: with_fixed_indentation
+
 Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
 
 Layout/AlignParameters:
   EnforcedStyle: with_fixed_indentation
 
-Layout/IndentArray:
+Layout/IndentFirstArgument:
   EnforcedStyle: consistent
 
-Layout/IndentHash:
+Layout/IndentFirstArrayElement:
   EnforcedStyle: consistent
 
-Style/Documentation:
-  Enabled: false
+Layout/IndentFirstHashElement:
+  EnforcedStyle: consistent
 
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
+
+Style/Documentation:
+  Enabled: false
 
 Style/FrozenStringLiteralComment:
   Enabled: true
