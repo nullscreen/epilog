@@ -8,7 +8,7 @@ RSpec.describe Epilog::Rails::ActionMailerSubscriber, type: :controller do
     view = ActionView::Base.new(ActionController::Base.view_paths, {})
     view.render(file: 'action_view/template.html.erb')
 
-    expect(Rails.logger[0][0]).to eq('INFO')
+    expect(Rails.logger[0][0]).to eq('DEBUG')
     expect(Rails.logger[0][3]).to match(
       message: 'Rendered template',
       layout: nil,
@@ -23,7 +23,7 @@ RSpec.describe Epilog::Rails::ActionMailerSubscriber, type: :controller do
     view = ActionView::Base.new(ActionController::Base.view_paths, {})
     view.render(file: 'action_view/template_w_partial.html.erb')
 
-    expect(Rails.logger[0][0]).to eq('INFO')
+    expect(Rails.logger[0][0]).to eq('DEBUG')
     expect(Rails.logger[0][3]).to match(
       message: 'Rendered partial',
       layout: nil,
@@ -38,7 +38,7 @@ RSpec.describe Epilog::Rails::ActionMailerSubscriber, type: :controller do
     view = ActionView::Base.new(ActionController::Base.view_paths, {})
     view.render(file: 'action_view/template_w_collection.html.erb')
 
-    expect(Rails.logger[0][0]).to eq('INFO')
+    expect(Rails.logger[0][0]).to eq('DEBUG')
     expect(Rails.logger[0][3]).to match(
       message: 'Rendered collection',
       layout: nil,
