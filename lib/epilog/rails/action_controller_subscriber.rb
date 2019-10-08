@@ -17,13 +17,13 @@ module Epilog
 
       def process_request(event)
         info do
-          {
+          event.payload[:context].merge(
             message: response_string(event),
             request: short_request_hash(event),
             response: response_hash(event),
             metrics: process_metrics(event.payload[:metrics]
               .merge(request_runtime: event.duration.round(2)))
-          }
+          )
         end
       end
 

@@ -5,4 +5,10 @@ class EmptyController < ActionController::Base
     params.permit(:id)
     render plain: ''
   end
+
+  def epilog_context
+    {
+      custom: 'custom context'
+    }
+  end
 end
