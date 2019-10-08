@@ -14,7 +14,7 @@ RSpec.describe Epilog::Rails::ActionMailerSubscriber, type: :controller do
       layout: nil,
       template: 'action_view/template.html.erb',
       metrics: {
-        duration: be_between(0, 10)
+        duration: be_between(0, 20)
       }
     )
   end
@@ -29,7 +29,7 @@ RSpec.describe Epilog::Rails::ActionMailerSubscriber, type: :controller do
       layout: nil,
       template: 'action_view/_partial.html.erb',
       metrics: {
-        duration: be_between(0, 10)
+        duration: be_between(0, 20)
       }
     )
   end
@@ -44,7 +44,7 @@ RSpec.describe Epilog::Rails::ActionMailerSubscriber, type: :controller do
       layout: nil,
       template: 'action_view/_collection.html.erb',
       metrics: {
-        duration: be_between(0, 10)
+        duration: be_between(0, 20)
       }
     )
   end
