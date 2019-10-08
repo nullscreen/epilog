@@ -8,10 +8,10 @@ module Epilog
 
       def request_received(event)
         info do
-          {
+          event.payload[:context].merge(
             message: "#{request_string(event)} started",
             request: request_hash(event)
-          }
+          )
         end
       end
 
