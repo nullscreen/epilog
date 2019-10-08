@@ -23,6 +23,7 @@ Combustion.initialize! :all do
   config.log_level = :debug
   config.action_controller.perform_caching = true
   config.cache_store = [:file_store, File.join(Rails.root, 'tmp/cache')]
+  config.filter_parameters = %w[password]
 
   if Rails::VERSION::MAJOR >= 5
     config.active_record.sqlite3.represent_boolean_as_integer = true

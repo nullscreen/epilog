@@ -63,6 +63,16 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
         }
       )
     end
+
+    it 'removes default Rails params' do
+      get(:index, params(foo: 'bar', password: 'secret'))
+
+      expect(Rails.logger[0][3]).to match(hash_including(
+        request: hash_including(
+          params: { 'foo' => 'bar', 'password' => '[FILTERED]' }
+        )
+      ))
+    end
   end
 
   describe RedirectController, type: :controller do
