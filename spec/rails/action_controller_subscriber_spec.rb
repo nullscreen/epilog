@@ -30,7 +30,8 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
           format: :html,
           controller: 'EmptyController',
           action: 'index'
-        }
+        },
+        custom: 'custom context'
       )
 
       expect(Rails.logger[2][0]).to eq('INFO')

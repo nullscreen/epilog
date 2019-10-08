@@ -10,7 +10,6 @@ module Epilog
         ensure
           payload[:response] = response
           payload[:metrics] = epilog_metrics
-          payload[:context] = epilog_context
         end
       end
     end
@@ -30,7 +29,8 @@ module Epilog
         request: request,
         response: response,
         controller: self.class.name,
-        action: action_name
+        action: action_name,
+        context: epilog_context
       }
     end
 
