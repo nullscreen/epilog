@@ -92,7 +92,7 @@ module Epilog
           headers: request.headers.to_h.keep_if do |key, _value|
             key =~ ActionDispatch::Http::Headers::HTTP_HEADER
           end,
-          params: request.filtered_parameters.except(*RAILS_PARAMS),
+          params: request.filtered_parameters.except(*rails_params),
           format: request.format.try(:ref),
           controller: event.payload[:controller],
           action: event.payload[:action]
@@ -146,6 +146,10 @@ module Epilog
 
           obj[key] = value.round(2) if value.is_a?(Numeric)
         end
+      end
+
+      def rails_params
+        @rails_params ||= RAILS_PARAMS + RAILS_PARAMS.map(&:to_s)
       end
     end
   end
