@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1
+
+- Add context to request log [#10](https://github.com/machinima/epilog/pull/10)
+
 ## 0.3
 
 - Update development dependencies [#1](https://github.com/machinima/epilog/pull/1)
