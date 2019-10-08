@@ -79,6 +79,8 @@ module Epilog
 
       def request_hash(event) # rubocop:disable AbcSize, MethodLength
         request = event.payload[:request]
+        param_filter = request.send(:parameter_filter)
+
         {
           id: request.uuid,
           ip: request.remote_ip,
@@ -86,12 +88,14 @@ module Epilog
           protocol: request.protocol.to_s.gsub('://', ''),
           method: request.request_method,
           port: request.port,
-          path: request.fullpath,
-          query: request.query_parameters,
-          cookies: request.cookies,
-          headers: request.headers.to_h.keep_if do |key, _value|
-            key =~ ActionDispatch::Http::Headers::HTTP_HEADER
-          end,
+          path: request.path,
+          query: param_filter.filter(request.query_parameters),
+          cookies: param_filter.filter(request.cookies),
+          headers: param_filter.filter(
+            request.headers.to_h.keep_if do |key, _value|
+              key =~ ActionDispatch::Http::Headers::HTTP_HEADER
+            end
+          ),
           params: request.filtered_parameters.except(*rails_params),
           format: request.format.try(:ref),
           controller: event.payload[:controller],
@@ -104,13 +108,13 @@ module Epilog
         {
           id: request.uuid,
           method: request.method,
-          path: request.fullpath
+          path: request.path
         }
       end
 
       def request_string(event)
         request = event.payload[:request]
-        "#{request.request_method} #{request.fullpath}"
+        "#{request.request_method} #{request.path}"
       end
 
       def response_hash(event)
