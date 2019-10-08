@@ -48,7 +48,8 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
           db_runtime: 0,
           view_runtime: be_within(10).of(10),
           request_runtime: be_between(0, 20)
-        }
+        },
+        custom: 'custom context'
       )
     end
 

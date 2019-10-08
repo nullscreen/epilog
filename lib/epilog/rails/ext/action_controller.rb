@@ -10,6 +10,7 @@ module Epilog
         ensure
           payload[:response] = response
           payload[:metrics] = epilog_metrics
+          payload[:context] = epilog_context
         end
       end
     end
@@ -38,6 +39,10 @@ module Epilog
         db_runtime: try(:db_runtime),
         view_runtime: view_runtime
       }
+    end
+
+    def epilog_context
+      {}
     end
   end
 end
