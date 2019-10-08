@@ -69,7 +69,9 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       get(:index, params(foo: 'bar', password: 'secret'))
 
       expect(Rails.logger[0][3]).to match(hash_including(
+        message: 'GET /empty started',
         request: hash_including(
+          path: '/empty',
           params: { 'foo' => 'bar', 'password' => '[FILTERED]' }
         )
       ))
