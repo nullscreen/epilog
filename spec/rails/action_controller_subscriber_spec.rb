@@ -11,6 +11,14 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
 
     it 'logs a normal GET request' do
       get(:index)
+      context = {
+        custom: 'custom context',
+        request: {
+          id: nil,
+          method: 'GET',
+          path: '/empty'
+        }
+      }
 
       expect(Rails.logger[0][0]).to eq('INFO')
       expect(Rails.logger[0][3]).to match(
@@ -30,12 +38,13 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
           format: :html,
           controller: 'EmptyController',
           action: 'index'
-        },
-        custom: 'custom context'
+        }
       )
+      expect(Rails.logger[0][4]).to eq([context])
+      expect(Rails.logger[2][4]).to eq([context])
 
-      expect(Rails.logger[2][0]).to eq('INFO')
-      expect(Rails.logger[2][3]).to match(
+      expect(Rails.logger[3][0]).to eq('INFO')
+      expect(Rails.logger[3][3]).to match(
         message: 'GET /empty > 200 OK',
         request: {
           id: nil,
@@ -49,9 +58,9 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
           db_runtime: 0,
           view_runtime: be_within(10).of(10),
           request_runtime: be_between(0, 20)
-        },
-        custom: 'custom context'
+        }
       )
+      expect(Rails.logger[3][4]).to eq([context])
     end
 
     it 'logs a request with unpermitted parameters' do
@@ -166,6 +175,19 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
           duration: be_between(0, 20)
         }
       )
+    end
+  end
+
+  describe ErrorController, type: :controller do
+    it 'resets context after request' do
+      expect { get(:index) }.to raise_error('Something bad happened')
+      Rails.logger.info('middle')
+      expect { get(:index) }.to raise_error('Something bad happened')
+
+      controller_log = [request: hash_including(path: '/error')]
+      expect(Rails.logger[0][4]).to match(controller_log)
+      expect(Rails.logger[2][4]).to eq([])
+      expect(Rails.logger[3][4]).to match(controller_log)
     end
   end
 end

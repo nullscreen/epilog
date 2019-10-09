@@ -3,6 +3,7 @@
 class EmptyController < ActionController::Base
   def index
     params.permit(:id)
+    Rails.logger.info('test log')
     render plain: ''
   end
 

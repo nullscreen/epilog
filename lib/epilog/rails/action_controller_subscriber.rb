@@ -7,24 +7,31 @@ module Epilog
       RAILS_PARAMS = %i[controller action format _method only_path].freeze
 
       def request_received(event)
+        push_context(
+          { request: short_request_hash(event) }
+          .merge(event.payload[:context])
+        )
+
         info do
-          event.payload[:context].merge(
+          {
             message: "#{request_string(event)} started",
             request: request_hash(event)
-          )
+          }
         end
       end
 
       def process_request(event)
         info do
-          event.payload[:context].merge(
+          {
             message: response_string(event),
             request: short_request_hash(event),
             response: response_hash(event),
             metrics: process_metrics(event.payload[:metrics]
               .merge(request_runtime: event.duration.round(2)))
-          )
+          }
         end
+
+        pop_context
       end
 
       def start_processing(*)

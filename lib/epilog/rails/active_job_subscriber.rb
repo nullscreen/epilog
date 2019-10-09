@@ -12,6 +12,7 @@ module Epilog
       end
 
       def perform_start(event)
+        push_context(job: short_job_hash(event.payload[:job]))
         info { event_hash('Performing job', event) }
       end
 
@@ -23,6 +24,7 @@ module Epilog
             }
           )
         end
+        pop_context
       end
 
       private
@@ -42,6 +44,13 @@ module Epilog
           queue: job.queue_name,
           arguments: job.arguments,
           scheduled_at: job.scheduled_at ? format_time(job.scheduled_at) : nil
+        }
+      end
+
+      def short_job_hash(job)
+        {
+          class: job.class.name,
+          id: job.job_id
         }
       end
 

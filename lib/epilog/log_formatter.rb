@@ -2,6 +2,8 @@
 
 module Epilog
   class Formatter
+    include ContextFormatter
+
     SEVERITY_MAP = {
       'FATAL' => 'ALERT',
       'WARN' => 'WARNING'
@@ -18,6 +20,7 @@ module Epilog
 
     def call(severity, time, progname, msg)
       log = base_log(severity, time, progname)
+      log.merge!(context)
       log.merge!(message(msg))
 
       if log[:exception].is_a?(Exception)

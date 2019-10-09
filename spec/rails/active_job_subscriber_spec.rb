@@ -5,6 +5,7 @@ class TestJob < ActiveJob::Base
   self.queue_adapter = :inline
 
   def perform
+    Rails.logger.info('User log')
   end
 
   def job_id
@@ -12,10 +13,20 @@ class TestJob < ActiveJob::Base
   end
 end
 
+class TestErrorJob < ActiveJob::Base
+  queue_as 'test-queue'
+  self.queue_adapter = :inline
+
+  def perform
+    raise 'Something went wrong'
+  end
+end
+
 # rubocop: disable BlockLength
 RSpec.describe Epilog::Rails::ActiveJobSubscriber do
   it 'logs inline execution' do
     TestJob.perform_later
+    context = { job: { class: 'TestJob', id: 'test-id' } }
 
     expect(Rails.logger[0][0]).to eq('INFO')
     expect(Rails.logger[0][3]).to match(
@@ -29,9 +40,13 @@ RSpec.describe Epilog::Rails::ActiveJobSubscriber do
       },
       adapter: 'ActiveJob::QueueAdapters::InlineAdapter'
     )
+    expect(Rails.logger[0][4]).to match([context])
 
-    expect(Rails.logger[1][0]).to eq('INFO')
-    expect(Rails.logger[1][3]).to match(
+    expect(Rails.logger[1][3]).to eq('User log')
+    expect(Rails.logger[1][4]).to match([context])
+
+    expect(Rails.logger[2][0]).to eq('INFO')
+    expect(Rails.logger[2][3]).to match(
       message: 'Performed job',
       job: {
         class: 'TestJob',
@@ -45,9 +60,10 @@ RSpec.describe Epilog::Rails::ActiveJobSubscriber do
         job_runtime: be_between(0, 20)
       }
     )
+    expect(Rails.logger[2][4]).to match([context])
 
-    expect(Rails.logger[2][0]).to eq('INFO')
-    expect(Rails.logger[2][3]).to match(
+    expect(Rails.logger[3][0]).to eq('INFO')
+    expect(Rails.logger[3][3]).to match(
       message: 'Enqueued job',
       job: {
         class: 'TestJob',
@@ -58,6 +74,23 @@ RSpec.describe Epilog::Rails::ActiveJobSubscriber do
       },
       adapter: 'ActiveJob::QueueAdapters::InlineAdapter'
     )
+  end
+
+  describe TestErrorJob do
+    it 'resets context after error' do
+      expect { TestErrorJob.perform_later }
+        .to raise_error('Something went wrong')
+
+      Rails.logger.info('middle')
+
+      expect { TestErrorJob.perform_later }
+        .to raise_error('Something went wrong')
+
+      job_context = [job: hash_including(class: 'TestErrorJob')]
+      expect(Rails.logger[0][4]).to match(job_context)
+      expect(Rails.logger[2][4]).to eq([])
+      expect(Rails.logger[3][4]).to match(job_context)
+    end
   end
 end
 # rubocop:enable BlockLength
