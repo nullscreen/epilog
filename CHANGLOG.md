@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0
+
+- Add context support to Logger [#12](https://github.com/machinima/epilog/pull/12)
+
 ## 0.3.1
 
 - Add context to request log [#10](https://github.com/machinima/epilog/pull/10)
