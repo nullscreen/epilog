@@ -57,7 +57,7 @@ RSpec.describe Epilog::Rails::ActiveJobSubscriber do
       },
       adapter: 'ActiveJob::QueueAdapters::InlineAdapter',
       metrics: {
-        job_runtime: be_between(0, 20)
+        job_runtime: be_between(0, 100)
       }
     )
     expect(Rails.logger[2][4]).to match([context])
