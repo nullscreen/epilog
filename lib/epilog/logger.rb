@@ -2,6 +2,8 @@
 
 module Epilog
   class Logger < ::Logger
+    include ContextLogger
+
     def initialize(*args, **options)
       super
       self.formatter = Formatter.new

@@ -7,4 +7,5 @@ Rails.application.routes.draw do
   resources 'file'
   resources 'halt'
   resources 'fragment'
+  resources 'error'
 end

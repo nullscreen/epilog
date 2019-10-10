@@ -9,6 +9,14 @@ module Epilog
         super()
         @logger = logger
       end
+
+      def push_context(context)
+        @logger.try(:push_context, context)
+      end
+
+      def pop_context
+        @logger.try(:pop_context)
+      end
     end
   end
 end

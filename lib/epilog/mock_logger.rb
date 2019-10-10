@@ -2,8 +2,8 @@
 
 module Epilog
   class MockLogger < ::Logger
-    def initialize
-      super(nil)
+    def initialize(**options)
+      super(nil, **options)
       reset
     end
 
@@ -44,6 +44,21 @@ module Epilog
 
     def reset
       @logs = []
+      @context = []
+    end
+
+    def with_context(context)
+      push_context(context)
+      yield
+      pop_context
+    end
+
+    def push_context(context)
+      @context << context
+    end
+
+    def pop_context
+      @context.pop
     end
 
     private
@@ -53,7 +68,7 @@ module Epilog
     end
 
     def write(severity, time, prog, message)
-      @logs << [severity, time, prog, message]
+      @logs << [severity, time, prog, message, @context.dup]
     end
   end
 end

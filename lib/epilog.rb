@@ -3,6 +3,7 @@
 require 'logger'
 
 require 'epilog/version'
+require 'epilog/context_logging'
 require 'epilog/logger'
 require 'epilog/mock_logger'
 require 'epilog/log_formatter'
