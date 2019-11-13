@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.0
+
+- Add options to enable/disable start and end logs [#15](https://github.com/machinima/epilog/pull/15)
+- Fix with_context to use ensure [#16](https://github.com/machinima/epilog/pull/16)
+
 ## 0.4.0
 
 - Add context support to Logger [#12](https://github.com/machinima/epilog/pull/12)
