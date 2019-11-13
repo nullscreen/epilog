@@ -5,6 +5,7 @@ module Epilog
     def with_context(context)
       push_context(context)
       yield
+    ensure
       pop_context
     end
 
