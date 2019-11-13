@@ -17,6 +17,10 @@ module Epilog
       def pop_context
         @logger.try(:pop_context)
       end
+
+      def config
+        ::Rails.application.config.epilog
+      end
     end
   end
 end

@@ -86,6 +86,21 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
         )
       ))
     end
+
+    context 'with double_request_logs = false' do
+      around do |example|
+        Rails.application.config.epilog.double_request_logs = false
+        example.run
+        Rails.application.config.epilog.double_request_logs = true
+      end
+
+      it 'skips start log' do
+        get(:index)
+        expect(Rails.logger[2][3]).to match(hash_including(
+          message: 'GET /empty > 200 OK'
+        ))
+      end
+    end
   end
 
   describe RedirectController, type: :controller do

@@ -20,6 +20,8 @@ module Epilog
       ].freeze
 
       config.epilog = ActiveSupport::OrderedOptions.new
+      config.epilog.double_request_logs = true
+      config.epilog.double_job_logs = true
       config.epilog.subscriptions = %i[
         action_controller
         action_mailer
