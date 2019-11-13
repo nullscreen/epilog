@@ -13,6 +13,8 @@ module Epilog
 
       def perform_start(event)
         push_context(job: short_job_hash(event.payload[:job]))
+        return unless config.double_job_logs
+
         info { event_hash('Performing job', event) }
       end
 

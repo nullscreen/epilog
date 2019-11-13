@@ -12,25 +12,11 @@ module Epilog
           .merge(event.payload[:context])
         )
 
-        info do
-          {
-            message: "#{request_string(event)} started",
-            request: request_hash(event)
-          }
-        end
+        log_start(event) if config.double_request_logs
       end
 
       def process_request(event)
-        info do
-          {
-            message: response_string(event),
-            request: short_request_hash(event),
-            response: response_hash(event),
-            metrics: process_metrics(event.payload[:metrics]
-              .merge(request_runtime: event.duration.round(2)))
-          }
-        end
-
+        log_end(event)
         pop_context
       end
 
@@ -83,6 +69,33 @@ module Epilog
       end
 
       private
+
+      def log_start(event)
+        info do
+          {
+            message: "#{request_string(event)} started",
+            request: request_hash(event)
+          }
+        end
+      end
+
+      def log_end(event) # rubocop:disable MethodLength
+        request = if config.double_request_logs
+          short_request_hash(event)
+        else
+          request_hash(event)
+        end
+
+        info do
+          {
+            message: response_string(event),
+            request: request,
+            response: response_hash(event),
+            metrics: process_metrics(event.payload[:metrics]
+              .merge(request_runtime: event.duration.round(2)))
+          }
+        end
+      end
 
       def request_hash(event) # rubocop:disable AbcSize, MethodLength
         request = event.payload[:request]
