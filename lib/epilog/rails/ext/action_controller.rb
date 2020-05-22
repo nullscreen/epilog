@@ -48,3 +48,6 @@ module Epilog
 end
 
 ActionController::Base.prepend(Epilog::ActionControllerExt)
+if defined? ActionController::API
+  ActionController::API.prepend(Epilog::ActionControllerExt)
+end

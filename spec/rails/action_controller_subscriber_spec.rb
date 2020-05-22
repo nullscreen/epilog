@@ -205,5 +205,16 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[3][4]).to match(controller_log)
     end
   end
+
+  if Rails::VERSION::MAJOR >= 5
+    describe ApiController, type: :controller do
+      it 'logs an API request' do
+        get(:index)
+        expect(Rails.logger[0][0]).to eq('INFO')
+        expect(Rails.logger[0][3][:message]).to eq('GET /api started')
+        expect(Rails.logger[1][3][:message]).to eq('GET /api > 200 OK')
+      end
+    end
+  end
 end
 # rubocop:enable Metrics/BlockLength
