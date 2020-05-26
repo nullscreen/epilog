@@ -8,4 +8,5 @@ Rails.application.routes.draw do
   resources 'halt'
   resources 'fragment'
   resources 'error'
+  resources 'api'
 end
