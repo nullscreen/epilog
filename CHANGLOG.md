@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.0
+
+- Add support for Rails 5 API-only controllers [#17](https://github.com/machinima/epilog/pull/17)
+
 ## 0.5.0
 
 - Add options to enable/disable start and end logs [#15](https://github.com/machinima/epilog/pull/15)
