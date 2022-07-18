@@ -47,7 +47,9 @@ module Epilog
   end
 end
 
-ActionController::Base.prepend(Epilog::ActionControllerExt)
-if defined? ActionController::API
-  ActionController::API.prepend(Epilog::ActionControllerExt)
+ActiveSupport.on_load(:action_controller_base) do
+  ActionController::Base.prepend(Epilog::ActionControllerExt)
+  if defined? ActionController::API
+    ActionController::API.prepend(Epilog::ActionControllerExt)
+  end
 end

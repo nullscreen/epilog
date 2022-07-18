@@ -2,10 +2,10 @@
 
 module Epilog
   class Logger
-    include LoggerSilence
-
     def silencer
       false
     end
   end
 end
+
+Epilog::Logger.send(:include, defined?(ActiveSupport::LoggerSilence) ? ActiveSupport::LoggerSilence : ::LoggerSilence)

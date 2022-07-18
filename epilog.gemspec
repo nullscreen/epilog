@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'byebug', '~> 11.0'
   spec.add_development_dependency 'combustion', '~> 1.1.0'
   spec.add_development_dependency 'irb'
-  spec.add_development_dependency 'rails', '>= 4.2', '< 6'
+  spec.add_development_dependency 'rails', '>= 4.2', '< 7'
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'redcarpet', '~> 3.5'
   spec.add_development_dependency 'rspec', '~> 3.4'
