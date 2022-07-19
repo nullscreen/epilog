@@ -8,4 +8,9 @@ module Epilog
   end
 end
 
-Epilog::Logger.send(:include, defined?(ActiveSupport::LoggerSilence) ? ActiveSupport::LoggerSilence : ::LoggerSilence)
+logger_silencer = if Rails::VERSION::MAJOR >= 6
+  ActiveSupport::LoggerSilence
+else
+  ::LoggerSilence
+end
+Epilog::Logger.send(:include, logger_silencer)

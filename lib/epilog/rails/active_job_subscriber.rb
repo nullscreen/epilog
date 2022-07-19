@@ -3,9 +3,27 @@
 module Epilog
   module Rails
     class ActiveJobSubscriber < LogSubscriber
+      # rubocop:disable Metrics/MethodLength
       def enqueue(event)
-        info { event_hash('Enqueued job', event) }
+        ex = event.payload[:exception_object]
+
+        if ex
+          error do
+            event_hash('Failed enqueuing job', event)
+          end
+        elsif event.payload[:aborted]
+          info do
+            event_hash(
+              'Failed enqueuing job, a before_enqueue callback' \
+              ' halted the enqueuing execution.',
+              event
+            )
+          end
+        else
+          info { event_hash('Enqueued job', event) }
+        end
       end
+      # rubocop:enable Metrics/MethodLength
 
       def enqueue_at(event)
         enqueue(event)
@@ -18,16 +36,44 @@ module Epilog
         info { event_hash('Performing job', event) }
       end
 
+      # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/AbcSize
       def perform(event)
-        info do
-          event_hash('Performed job', event).merge(
-            metrics: {
-              job_runtime: event.duration
-            }
-          )
+        ex = event.payload[:exception_object]
+        if ex
+          error do
+            event_hash('Error performing job', event).merge(
+              metrics: {
+                job_runtime: event.duration
+              }
+            )
+          end
+        elsif event.payload[:aborted]
+          error do
+            event_hash(
+              'Error performing job, a before_perform ' \
+              'callback halted the job execution',
+              event
+            ).merge(
+              metrics: {
+                job_runtime: event.duration
+              }
+            )
+          end
+        else
+          info do
+            event_hash('Performed job', event).merge(
+              metrics: {
+                job_runtime: event.duration
+              }
+            )
+          end
         end
+
         pop_context
       end
+      # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/AbcSize
 
       private
 

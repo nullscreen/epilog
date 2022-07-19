@@ -12,6 +12,8 @@ RSpec.describe Epilog::Rails::ActiveRecordSubscriber do
       binds << { type: nil, name: 'LIMIT', value: 1 }
     end
 
+    query.gsub!('  ', ' ') if Rails::VERSION::MAJOR >= 6
+
     User.find_by(id: 1)
     expect(Rails.logger[0][0]).to eq('DEBUG')
     expect(Rails.logger[0][3]).to match(

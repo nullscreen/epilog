@@ -47,9 +47,17 @@ module Epilog
   end
 end
 
-ActiveSupport.on_load(:action_controller_base) do
+def prepend_controller_ext
   ActionController::Base.prepend(Epilog::ActionControllerExt)
-  if defined? ActionController::API
-    ActionController::API.prepend(Epilog::ActionControllerExt)
+  return unless defined? ActionController::API
+
+  ActionController::API.prepend(Epilog::ActionControllerExt)
+end
+
+if ::Rails::VERSION::MAJOR < 5
+  prepend_controller_ext
+else
+  ActiveSupport.on_load(:action_controller_base) do
+    prepend_controller_ext
   end
 end

@@ -28,17 +28,22 @@ RSpec.describe Epilog::Rails::ActionMailerSubscriber, type: :controller do
     )
   end
 
-  it 'logs receiving mail' do
-    TestMailer.receive(Mail.new(body: 'test mail').to_s)
+  # Method `receive` removed in Rails 6.1
+  # https://github.com/rails/rails/commit/d5fa9569a0d401893d54ee47fe43fd87b6155fb7
+  if Gem::Version.new(Rails::VERSION::STRING) < Gem::Version.new('6.1.0')
+    it 'logs receiving mail' do
+      TestMailer.receive(Mail.new(body: 'test mail').to_s)
 
-    expect(Rails.logger[0][0]).to eq('INFO')
-    expect(Rails.logger[0][3]).to match(
-      message: 'Received mail',
-      body: include('test mail'),
-      metrics: {
-        duration: be_between(0, 20)
-      }
-    )
+      expect(Rails.logger[0][0]).to eq('INFO')
+      expect(Rails.logger[0][3])
+        .to match(
+          message: 'Received mail',
+          body: include('test mail'),
+          metrics: {
+            duration: be_between(0, 20)
+          }
+        )
+    end
   end
 end
 # rubocop:enable BlockLength

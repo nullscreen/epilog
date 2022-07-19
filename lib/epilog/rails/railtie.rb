@@ -3,6 +3,15 @@
 module Epilog
   module Rails
     class Railtie < ::Rails::Railtie
+      def self.rails_6_1_higher?
+        Gem::Version.new(::Rails::VERSION::STRING) >= Gem::Version.new('6.1.0')
+      end
+
+      # We need this in Rails 6.
+      # Without this line `ActiveJob::LogSubscriber` fails
+      # with unknown contant error
+      ActiveSupport.run_load_hooks(:active_job, ActiveJob::Base)
+
       SUBSCRIBERS = {
         action_controller: ActionControllerSubscriber,
         action_mailer: ActionMailerSubscriber,
@@ -16,7 +25,11 @@ module Epilog
         ActionMailer::LogSubscriber,
         ActionView::LogSubscriber,
         ActiveRecord::LogSubscriber,
-        ActiveJob::Logging::LogSubscriber
+        if rails_6_1_higher?
+          ActiveJob::LogSubscriber
+        else
+          ActiveJob::Logging::LogSubscriber
+        end
       ].freeze
 
       config.epilog = ActiveSupport::OrderedOptions.new
@@ -56,7 +69,7 @@ module Epilog
 
       def unsubscribe_listeners(subscriber, pattern)
         notifier = ActiveSupport::Notifications.notifier
-        notifier.listeners_for(pattern).each do |listener|
+        notifier.listeners_for(Array.wrap(pattern).first).each do |listener|
           if listener.delegates_to?(subscriber)
             ActiveSupport::Notifications.unsubscribe(listener)
           end
