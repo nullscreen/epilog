@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0
+
+- Add support for Rails 6 [#18](https://github.com/machinima/epilog/pull/18)
+
 ## 0.6.0
 
 - Add support for Rails 5 API-only controllers [#17](https://github.com/machinima/epilog/pull/17)
