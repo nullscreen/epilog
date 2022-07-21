@@ -104,7 +104,8 @@ RSpec.describe Epilog::Rails::ActiveJobSubscriber do
       job_context = [job: hash_including(class: 'TestErrorJob')]
       expect(Rails.logger[0][4]).to match(job_context)
       expect(Rails.logger[2][4]).to eq([])
-      expect(Rails.logger[3][4]).to match(job_context)
+      log_line = Rails::VERSION::MAJOR >= 6 ? 4 : 3
+      expect(Rails.logger[log_line][4]).to match(job_context)
     end
   end
 end

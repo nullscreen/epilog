@@ -2,10 +2,15 @@
 
 module Epilog
   class Logger
-    include LoggerSilence
-
     def silencer
       false
     end
   end
 end
+
+logger_silencer = if Rails::VERSION::MAJOR >= 6
+  ActiveSupport::LoggerSilence
+else
+  ::LoggerSilence
+end
+Epilog::Logger.send(:include, logger_silencer)

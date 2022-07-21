@@ -13,6 +13,8 @@ module Epilog
         end
       end
 
+      # Method `receive` removed in Rails 6.1
+      # https://github.com/rails/rails/commit/d5fa9569a0d401893d54ee47fe43fd87b6155fb7
       def receive(event)
         info do
           hash(

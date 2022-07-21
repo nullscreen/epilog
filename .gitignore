@@ -9,3 +9,4 @@
 
 /spec/rails_app/log/
 /spec/rails_app/db/test.sqlite
+/.idea

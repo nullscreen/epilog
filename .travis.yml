@@ -4,10 +4,12 @@ rvm:
   - 2.3
   - 2.4
   - 2.5
+  - 2.6
 env:
   matrix:
-    - RAILS_VERSION=4.2
     - RAILS_VERSION=5.2
+    - RAILS_VERSION=6.0
+    - RAILS_VERSION=6.1
   global:
     - COVERAGE=1
     - secure: 'nm0AJBULqunzS//h26lblqWHV4Kl0Ij9OPVHMI761TNeFFjP2+KKUVh4qYEKrdUDp7pk9Wa4CdAB9EFLYTJMwyK8RlSkdMLaHGT9xdOqbycBS6vkW2symvdu58SSdsNmnnFV4ebOwEmEcDhAh8SyT0ZkUVhyzGntdzOOZmULi57kOwm8QGrrr4/4xaTmDleZlTDS404nD28wJctaBT8Xa33inaYYrHLKz4xbvFFtptrPb+Arav9enljqiqOu4XjXCIP2eOSP7PHkDPuRn0JKDFT3zKmj0MIUbYkoheQL6R3tMF9zx5gm4GKbd7iunuIsjbFweiveZwZhfNGDPCICuw76UWZCrN4PpomA7XDNjbs0JVRJvnBxLZk5X3w3Sacb4zBTd+U8WH7uAb9qdD7m4xUswox4tPZDPXYObw2PDqtLlsSRn3WDKsnG0/Tt0D+kFsx43MbrvspdOzjarJsIXzU9aJqfE97nM4ZrNcktsW4PrqGflhcDVTKg+kLQj4bO0csR1W/JhGHN0JsVNUmNFN9QqpuRxxI/AmnPBtKR29DDy3BUv1b/kCZbsqq4+wbgCKDJng5VBgpG4VekOiTT2xmlwoxNK4IUAISbu7G/eyCcp33jb+27QE74a13xQsMLvh/wjh1sFEfzJvQzXFL+gjkVP4Z/+uSbc2+8/p+FKm8='
@@ -28,7 +30,7 @@ after_script:
 jobs:
   include:
     - stage: release
-      rvm: 2.3
+      rvm: 2.6
       script: skip
       deploy:
         provider: rubygems
