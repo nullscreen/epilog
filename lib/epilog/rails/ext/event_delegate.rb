@@ -11,6 +11,15 @@ module Epilog
   end
 end
 
-ActiveSupport::Notifications::Fanout::Subscribers::Evented.include(
-  Epilog::EventDelegateExt
-)
+# @api external
+module ActiveSupport
+  module Notifications
+    class Fanout
+      module Subscribers
+        class Evented
+          include Epilog::EventDelegateExt
+        end
+      end
+    end
+  end
+end

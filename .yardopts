@@ -1,4 +1,4 @@
 --markup markdown
-lib/**/*.rb
--
-LICENSE.txt
+--markup-provider redcarpet
+--no-private
+--no-api

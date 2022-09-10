@@ -14,22 +14,21 @@ Gem::Specification.new do |spec|
   spec.summary = 'A JSON logger with Rails support'
   spec.homepage = 'https://github.com/nullscreen/epilog'
 
-  spec.files = `git ls-files -z`
-    .split("\x0")
-    .reject { |f| f.match(%r{^spec/}) }
+  rubydoc = 'https://www.rubydoc.info/gems'
+  spec.metadata = {
+    'changelog_uri' => "#{spec.homepage}/blob/main/CHANGELOG.md",
+    'documentation_uri' => "#{rubydoc}/#{spec.name}/#{spec.version}",
+    'rubygems_mfa_required' => 'true'
+  }
+
+  spec.files = Dir['lib/**/*.rb', '*.md', '*.txt', '.yardopts']
   spec.require_paths = ['lib']
 
-  spec.add_development_dependency 'bundler', '>= 1.12'
-  spec.add_development_dependency 'byebug', '~> 11.0'
+  spec.required_ruby_version = '>= 2.3'
+
   spec.add_development_dependency 'combustion', '~> 1.3'
-  spec.add_development_dependency 'irb'
   spec.add_development_dependency 'rails', '>= 4.2', '< 7'
-  spec.add_development_dependency 'rake', '~> 13.0'
-  spec.add_development_dependency 'redcarpet', '~> 3.5'
-  spec.add_development_dependency 'rspec', '~> 3.4'
-  spec.add_development_dependency 'rspec-rails', '~> 3.8.1'
-  spec.add_development_dependency 'rubocop', '0.75'
-  spec.add_development_dependency 'simplecov', '~> 0.17'
-  spec.add_development_dependency 'sqlite3', '~> 1.3', '< 1.5'
-  spec.add_development_dependency 'yard', '~> 0.9.11'
+  spec.add_development_dependency 'rspec', '~> 3.11'
+  spec.add_development_dependency 'rspec-rails', '~> 5.1'
+  spec.add_development_dependency 'sqlite3', '~> 1.3'
 end

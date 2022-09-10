@@ -3,7 +3,6 @@
 module Epilog
   module Rails
     class ActiveJobSubscriber < LogSubscriber
-      # rubocop:disable Metrics/MethodLength
       def enqueue(event)
         ex = event.payload[:exception_object]
 
@@ -14,8 +13,8 @@ module Epilog
         elsif event.payload[:aborted]
           info do
             event_hash(
-              'Failed enqueuing job, a before_enqueue callback' \
-              ' halted the enqueuing execution.',
+              'Failed enqueuing job, a before_enqueue callback ' \
+                'halted the enqueuing execution.',
               event
             )
           end
@@ -23,7 +22,6 @@ module Epilog
           info { event_hash('Enqueued job', event) }
         end
       end
-      # rubocop:enable Metrics/MethodLength
 
       def enqueue_at(event)
         enqueue(event)
@@ -37,7 +35,6 @@ module Epilog
       end
 
       # rubocop:disable Metrics/MethodLength
-      # rubocop:disable Metrics/AbcSize
       def perform(event)
         ex = event.payload[:exception_object]
         if ex
@@ -52,7 +49,7 @@ module Epilog
           error do
             event_hash(
               'Error performing job, a before_perform ' \
-              'callback halted the job execution',
+                'callback halted the job execution',
               event
             ).merge(
               metrics: {
@@ -73,7 +70,6 @@ module Epilog
         pop_context
       end
       # rubocop:enable Metrics/MethodLength
-      # rubocop:enable Metrics/AbcSize
 
       private
 

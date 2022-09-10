@@ -1,0 +1,60 @@
+---
+name: CI
+on:
+  push:
+    tags: ['v*']
+    branches: [main]
+  pull_request:
+    branches: ['**']
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - ruby: '2.3'
+            rails: '5.2'
+            bundler: '1'
+          - ruby: '2.4'
+            rails: '5.2'
+            bundler: '1'
+          - ruby: '2.5'
+            rails: '6.0'
+            bundler: 'default'
+          - ruby: '2.6'
+            rails: '6.0'
+            bundler: 'default'
+          - ruby: '2.7'
+            rails: '6.1'
+            bundler: 'default'
+    env:
+      RAILS_VERSION: ${{ matrix.rails }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler: ${{ matrix.bundler }}
+          bundler-cache: true
+      - run: bundle exec rubocop
+        if: matrix.ruby == '2.7'
+      - run: bundle exec rspec --format doc
+      - uses: codecov/codecov-action@v3
+        if: matrix.ruby == '2.7'
+        with:
+          files: coverage/coverage.xml
+      - run: bin/yardoc --fail-on-warning
+        if: matrix.ruby == '2.7'
+      - run: bin/check-version
+
+  release:
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dawidd6/action-publish-gem@v1
+        with:
+          api_key: ${{secrets.RUBYGEMS_API_KEY}}

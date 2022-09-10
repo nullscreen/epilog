@@ -10,9 +10,10 @@ module Epilog
       private
 
       def fix(value)
-        if value.is_a?(Hash)
+        case value
+        when Hash
           fix_hash(value)
-        elsif value.is_a?(Array)
+        when Array
           value.map { |i| fix(i) }
         else
           value

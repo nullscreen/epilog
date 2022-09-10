@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable ClassLength
 module Epilog
   module Rails
     class ActionControllerSubscriber < LogSubscriber
@@ -79,7 +78,7 @@ module Epilog
         end
       end
 
-      def log_end(event) # rubocop:disable MethodLength
+      def log_end(event)
         request = if config.double_request_logs
           short_request_hash(event)
         else
@@ -97,7 +96,7 @@ module Epilog
         end
       end
 
-      def request_hash(event) # rubocop:disable AbcSize, MethodLength
+      def request_hash(event)
         request = event.payload[:request]
         param_filter = request.send(:parameter_filter)
 
@@ -178,4 +177,3 @@ module Epilog
     end
   end
 end
-# rubocop:enable ClassLength
