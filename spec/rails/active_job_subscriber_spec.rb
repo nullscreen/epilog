@@ -22,7 +22,6 @@ class TestErrorJob < ActiveJob::Base
   end
 end
 
-# rubocop: disable BlockLength
 RSpec.describe Epilog::Rails::ActiveJobSubscriber do
   it 'logs inline execution' do
     TestJob.perform_later
@@ -93,12 +92,12 @@ RSpec.describe Epilog::Rails::ActiveJobSubscriber do
 
   describe TestErrorJob do
     it 'resets context after error' do
-      expect { TestErrorJob.perform_later }
+      expect { described_class.perform_later }
         .to raise_error('Something went wrong')
 
       Rails.logger.info('middle')
 
-      expect { TestErrorJob.perform_later }
+      expect { described_class.perform_later }
         .to raise_error('Something went wrong')
 
       job_context = [job: hash_including(class: 'TestErrorJob')]
@@ -109,4 +108,3 @@ RSpec.describe Epilog::Rails::ActiveJobSubscriber do
     end
   end
 end
-# rubocop:enable BlockLength

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 RSpec.describe Epilog::Rails::ActionControllerSubscriber do
   def params(values)
     Rails::VERSION::MAJOR >= 5 ? { params: values } : values
@@ -217,4 +216,3 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
     end
   end
 end
-# rubocop:enable Metrics/BlockLength

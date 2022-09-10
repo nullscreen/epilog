@@ -1,10 +1,16 @@
 # frozen_string_literal: true
 
-require 'byebug'
+require 'byebug' if Gem.loaded_specs['byebug']
 
-if ENV['COVERAGE']
+if Gem.loaded_specs['simplecov'] && (ENV.fetch('COVERAGE', nil) || ENV.fetch('CI', nil))
   require 'simplecov'
+  if ENV['CI']
+    require 'simplecov-cobertura'
+    SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter
+  end
+
   SimpleCov.start do
+    enable_coverage :branch
     add_filter '/spec/'
     add_filter '/vendor/'
   end
@@ -34,31 +40,6 @@ $stdout = @orig_stdout
 
 require 'epilog'
 require 'rspec/rails'
-
-# a workaround to avoid MonitorMixin double-initialize error
-# https://github.com/rails/rails/issues/34790#issuecomment-681034561
-if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('2.6.0')
-  if Gem::Version.new(::Rails.version) < Gem::Version.new('5.0.0')
-    # rubocop:disable Style/ClassAndModuleChildren
-    class ActionController::TestResponse < ActionDispatch::TestResponse
-      def recycle!
-        if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('2.7.0')
-          @mon_data = nil
-          @mon_data_owner_object_id = nil
-        else
-          @mon_mutex = nil
-          @mon_mutex_owner_object_id = nil
-        end
-        initialize
-      end
-    end
-    # rubocop:enable Style/ClassAndModuleChildren
-  else
-    puts(
-      'Monkeypatch for ActionController::TestResponse is no longer needed'
-    )
-  end
-end
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

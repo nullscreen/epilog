@@ -7,7 +7,6 @@ module Epilog
       reset
     end
 
-    # rubocop:disable MethodLength
     def add(severity, message = nil, progname = nil)
       severity ||= Logger::UNKNOWN
       return true if severity < level
@@ -24,7 +23,6 @@ module Epilog
 
       write(format_severity(severity), current_time, prog, message)
     end
-    # rubocop:enable MethodLength
     alias log add
 
     def reopen(_logdev = nil)

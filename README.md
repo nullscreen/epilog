@@ -1,10 +1,9 @@
 # Epilog Gem
 
 [![Gem Version](https://badge.fury.io/rb/epilog.svg)](https://badge.fury.io/rb/epilog)
-[![Build Status](https://travis-ci.org/nullscreen/epilog.svg?branch=master)](https://travis-ci.org/nullscreen/epilog)
-[![Code Climate](https://codeclimate.com/github/nullscreen/epilog/badges/gpa.svg)](https://codeclimate.com/github/nullscreen/epilog)
-[![Test Coverage](https://codeclimate.com/github/nullscreen/epilog/badges/coverage.svg)](https://codeclimate.com/github/nullscreen/epilog)
-[![Inline docs](http://inch-ci.org/github/nullscreen/epilog.svg?branch=master)](http://inch-ci.org/github/nullscreen/epilog)
+[![CI](https://github.com/nullscreen/epilog/workflows/CI/badge.svg)](https://github.com/nullscreen/epilog/actions?query=workflow%3ACI+branch%main)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/28734dd732d34bc3b014760508b2d3da)](https://www.codacy.com/gh/nullscreen/epilog/dashboard)
+[![Code Coverage](https://codecov.io/gh/nullscreen/epilog/branch/main/graph/badge.svg?token=3Q3M49C5ZI)](https://codecov.io/gh/nullscreen/epilog)
 
 A JSON logger with Rails support.
 

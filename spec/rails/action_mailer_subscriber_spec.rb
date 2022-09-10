@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable BlockLength
 RSpec.describe Epilog::Rails::ActionMailerSubscriber, type: :controller do
   render_views
 
@@ -46,4 +45,3 @@ RSpec.describe Epilog::Rails::ActionMailerSubscriber, type: :controller do
     end
   end
 end
-# rubocop:enable BlockLength

@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 
-# rubocop:disable BlockLength
 RSpec.describe Epilog::Rails::ActionViewSubscriber, type: :controller do
   render_views
 
   let(:lookup_context) do
     ActionView::LookupContext.new(ActionController::Base.view_paths)
   end
-  let(:view) { ActionViewBasePlus.new(lookup_context, {}, EmptyController.new) }
-
-  class ActionViewBasePlus < ActionView::Base
-    def compiled_method_container
-      self.class
+  let(:action_view_base) do
+    Class.new(ActionView::Base) do
+      def compiled_method_container
+        self.class
+      end
     end
   end
+  let(:view) { action_view_base.new(lookup_context, {}, EmptyController.new) }
 
   it 'logs rendering a template' do
     view.render(template: 'action_view/template.html.erb')
@@ -57,4 +57,3 @@ RSpec.describe Epilog::Rails::ActionViewSubscriber, type: :controller do
     )
   end
 end
-# rubocop:enable BlockLength

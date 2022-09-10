@@ -8,11 +8,9 @@ module Epilog
       def filter_parameters
         return @filter_parameters if @filter_parameters
 
-        filtered = Hash[
-          ::Rails.application.config.filter_parameters.map do |p|
-            [p.to_s.downcase, true]
-          end
-        ]
+        filtered = ::Rails.application.config.filter_parameters.map do |p|
+          [p.to_s.downcase, true]
+        end.to_h
 
         @filter_parameters = filtered if ::Rails.initialized?
         filtered

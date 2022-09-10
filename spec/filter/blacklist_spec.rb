@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable BlockLength
 RSpec.describe Epilog::Filter::Blacklist do
   it 'hashes blacklisted keys' do
     filtered = described_class.new.call(good: 'hooray', password: 'secret')
@@ -41,4 +40,3 @@ RSpec.describe Epilog::Filter::Blacklist do
     )
   end
 end
-# rubocop:enable BlockLength
