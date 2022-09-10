@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.0
+
+- Update license to MIT [#19](https://github.com/nullscreen/epilog/pull/19)
+- Update gems and CI [#20](https://github.com/nullscreen/epilog/pull/20)
+
 ## 0.7.0
 
 - Add support for Rails 6 [#18](https://github.com/nullscreen/epilog/pull/18)
