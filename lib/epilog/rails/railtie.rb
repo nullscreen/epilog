@@ -10,25 +10,25 @@ module Epilog
       # We need this in Rails 6.
       # Without this line `ActiveJob::LogSubscriber` fails
       # with unknown contant error
-      ActiveSupport.run_load_hooks(:active_job, ActiveJob::Base)
+      ActiveSupport.run_load_hooks(:active_job, ActiveJob::Base) if defined?(ActiveJob::Base)
 
       SUBSCRIBERS = {
-        action_controller: ActionControllerSubscriber,
-        action_mailer: ActionMailerSubscriber,
-        action_view: ActionViewSubscriber,
-        active_record: ActiveRecordSubscriber,
-        active_job: ActiveJobSubscriber
+        action_controller: 'ActionControllerSubscriber',
+        action_mailer: 'ActionMailerSubscriber',
+        action_view: 'ActionViewSubscriber',
+        active_record: 'ActiveRecordSubscriber',
+        active_job: 'ActiveJobSubscriber'
       }.freeze
 
       SUBSCRIBER_BLACKLIST = [
-        ActionController::LogSubscriber,
-        ActionMailer::LogSubscriber,
-        ActionView::LogSubscriber,
-        ActiveRecord::LogSubscriber,
+        'ActionController::LogSubscriber',
+        'ActionMailer::LogSubscriber',
+        'ActionView::LogSubscriber',
+        'ActiveRecord::LogSubscriber',
         if rails_6_1_higher?
-          ActiveJob::LogSubscriber
+          'ActiveJob::LogSubscriber'
         else
-          ActiveJob::Logging::LogSubscriber
+          'ActiveJob::Logging::LogSubscriber'
         end
       ].freeze
 
@@ -49,7 +49,9 @@ module Epilog
         ::Rails.logger ||= Logger.new($stdout)
 
         app.config.epilog.subscriptions.each do |namespace|
-          subscriber_class = SUBSCRIBERS[namespace]
+          subscriber_class = SUBSCRIBERS[namespace].safe_constantize
+          next unless subscriber_class
+
           subscriber_class.attach_to(
             namespace,
             subscriber_class.new(::Rails.logger)
@@ -78,7 +80,7 @@ module Epilog
 
       def blacklisted_subscribers
         ActiveSupport::LogSubscriber.log_subscribers.select do |subscriber|
-          SUBSCRIBER_BLACKLIST.include?(subscriber.class)
+          SUBSCRIBER_BLACKLIST.include?(subscriber.class.name)
         end
       end
     end
