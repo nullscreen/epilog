@@ -28,6 +28,22 @@ jobs:
           - ruby: '2.7'
             rails: '6.1'
             bundler: 'default'
+          - ruby: '3.0'
+            rails: '6.1'
+            bundler: 'default'
+          - ruby: '3.1'
+            rails: '6.1'
+            bundler: 'default'
+          - ruby: '3.2'
+            rails: '7'
+            bundler: 'default'
+          - ruby: '3.3'
+            rails: '7'
+            bundler: 'default'
+          - ruby: '3.4'
+            rails: '8'
+            bundler: 'default'
+
     env:
       RAILS_VERSION: ${{ matrix.rails }}
 
@@ -39,14 +55,14 @@ jobs:
           bundler: ${{ matrix.bundler }}
           bundler-cache: true
       - run: bundle exec rubocop
-        if: matrix.ruby == '2.7'
+        if: matrix.ruby == '3.4'
       - run: bundle exec rspec --format doc
       - uses: codecov/codecov-action@v3
-        if: matrix.ruby == '2.7'
+        if: matrix.ruby == '3.4'
         with:
           files: coverage/coverage.xml
       - run: bin/yardoc --fail-on-warning
-        if: matrix.ruby == '2.7'
+        if: matrix.ruby == '3.4'
       - run: bin/check-version
 
   release:
