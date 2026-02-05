@@ -24,7 +24,8 @@ $stdout = File.open(File::NULL, 'w')
 
 Combustion.path = 'spec/rails_app'
 Combustion.initialize! :all do
-  config.logger = Epilog::MockLogger.new
+  MOCK_LOGGER = Epilog::MockLogger.new
+  config.logger = MOCK_LOGGER
   config.logger.progname = 'epilog'
   config.log_level = :debug
   config.action_controller.perform_caching = true
@@ -53,10 +54,11 @@ RSpec.configure do |config|
   config.disable_monkey_patching!
 
   config.before do
-    Rails.logger.reset
+    MOCK_LOGGER.reset
   end
 
   config.after do
+    MOCK_LOGGER.to_a.each { |l| puts l.inspect }
     FileUtils.rm_rf(File.join(Rails.root, 'tmp'))
   end
 end

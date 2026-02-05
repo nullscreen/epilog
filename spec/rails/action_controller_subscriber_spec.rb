@@ -20,7 +20,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       }
 
       expect(Rails.logger[0][0]).to eq('INFO')
-      expect(Rails.logger[0][3]).to match(
+      expect(Rails.logger[0][3]).to eq(
         message: 'GET /empty started',
         request: {
           id: nil,
@@ -43,7 +43,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[2][4]).to eq([context])
 
       expect(Rails.logger[3][0]).to eq('INFO')
-      expect(Rails.logger[3][3]).to match(
+      expect(Rails.logger[3][3]).to eq(
         message: 'GET /empty > 200 OK',
         request: {
           id: nil,
@@ -77,7 +77,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
     it 'removes default Rails params' do
       get(:index, params(foo: 'bar', password: 'secret'))
 
-      expect(Rails.logger[0][3]).to match(hash_including(
+      expect(Rails.logger[0][3]).to eq(hash_including(
         message: 'GET /empty started',
         request: hash_including(
           path: '/empty',
@@ -95,7 +95,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
 
       it 'skips start log' do
         get(:index)
-        expect(Rails.logger[2][3]).to match(hash_including(
+        expect(Rails.logger[2][3]).to eq(hash_including(
           message: 'GET /empty > 200 OK'
         ))
       end
@@ -107,7 +107,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       get(:index)
 
       expect(Rails.logger[1][0]).to eq('INFO')
-      expect(Rails.logger[1][3]).to match(
+      expect(Rails.logger[1][3]).to eq(
         message: 'Redirect > https://www.google.com',
         metrics: {
           duration: be_between(0, 20)
@@ -123,7 +123,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       get(:index)
 
       expect(Rails.logger[2][0]).to eq('INFO')
-      expect(Rails.logger[2][3]).to match(
+      expect(Rails.logger[2][3]).to eq(
         message: 'Sent data test.txt',
         metrics: {
           duration: be_between(0, 20)
@@ -139,7 +139,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       get(:index)
 
       expect(Rails.logger[1][0]).to eq('INFO')
-      expect(Rails.logger[1][3]).to match(
+      expect(Rails.logger[1][3]).to eq(
         message: "Sent file #{filename}",
         metrics: {
           duration: be_between(0, 20)
@@ -155,7 +155,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       get(:index)
 
       expect(Rails.logger[2][0]).to eq('INFO')
-      expect(Rails.logger[2][3]).to match(
+      expect(Rails.logger[2][3]).to eq(
         message: 'Filter chain halted as :halt rendered or redirected',
         metrics: {
           duration: be_within(1).of(0)
@@ -176,14 +176,14 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
         l[3][:message].match(/(read|write)_fragment/)
       end
 
-      expect(logs[0][3]).to match(
+      expect(logs[0][3]).to eq(
         message: start_with('read_fragment views/'),
         metrics: {
           duration: be_between(0, 20)
         }
       )
 
-      expect(logs[1][3]).to match(
+      expect(logs[1][3]).to eq(
         message: start_with('write_fragment views/'),
         metrics: {
           duration: be_between(0, 20)

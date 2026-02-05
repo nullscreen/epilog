@@ -44,8 +44,6 @@ module Epilog
       ]
 
       initializer 'epilog.configure' do |app|
-        disable_rails_defaults
-
         ::Rails.logger ||= Logger.new($stdout)
 
         app.config.epilog.subscriptions.each do |namespace|
@@ -56,29 +54,49 @@ module Epilog
           )
         end
       end
-
-      private
-
-      def disable_rails_defaults
-        blacklisted_subscribers.each do |subscriber|
-          subscriber.patterns.each do |pattern|
-            unsubscribe_listeners(subscriber, pattern)
-          end
-        end
+      
+      # In Rails 7.1+, some subscribers (like ActionView) are attached late
+      # in the initialization process, so we need to disable them after
+      # initialization completes
+      config.after_initialize do
+        disable_rails_defaults
       end
 
-      def unsubscribe_listeners(subscriber, pattern)
-        notifier = ActiveSupport::Notifications.notifier
-        notifier.listeners_for(Array.wrap(pattern).first).each do |listener|
-          if listener.delegates_to?(subscriber)
-            ActiveSupport::Notifications.unsubscribe(listener)
+      class << self
+        private
+
+        def disable_rails_defaults
+          blacklisted_subscribers.each do |subscriber|
+            subscriber.patterns.each do |pattern|
+              unsubscribe_listeners(subscriber, pattern)
+            end
           end
         end
-      end
 
-      def blacklisted_subscribers
-        ActiveSupport::LogSubscriber.log_subscribers.select do |subscriber|
-          SUBSCRIBER_BLACKLIST.include?(subscriber.class)
+        def unsubscribe_listeners(subscriber, pattern)
+          notifier = ActiveSupport::Notifications.notifier
+          notifier.listeners_for(Array.wrap(pattern).first).each do |listener|
+            if listener.delegates_to?(subscriber) || delegates_to_subscriber_class?(listener, subscriber)
+              ActiveSupport::Notifications.unsubscribe(listener)
+            end
+          end
+        end
+        
+        def delegates_to_subscriber_class?(listener, subscriber)
+          return false unless listener.respond_to?(:delegate)
+          
+          delegate = listener.delegate
+          subscriber_class = subscriber.class
+          
+          # Check if the delegate's class name starts with the subscriber's class name
+          # This handles cases like ActionView::LogSubscriber::Start delegating for ActionView::LogSubscriber
+          delegate.class.name.to_s.start_with?(subscriber_class.name.to_s)
+        end
+
+        def blacklisted_subscribers
+          ActiveSupport::LogSubscriber.log_subscribers.select do |subscriber|
+            SUBSCRIBER_BLACKLIST.include?(subscriber.class)
+          end
         end
       end
     end
