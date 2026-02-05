@@ -19,7 +19,7 @@ module Epilog
 
       def hash(event, message)
         {
-          message: message,
+          message:,
           template: fix_path(event.payload[:identifier]),
           layout: fix_path(event.payload[:layout]),
           metrics: {

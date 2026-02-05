@@ -3,10 +3,13 @@
 module Epilog
   module EventDelegateExt
     # Rails has no public API to determine the delegate for an event
-    # object. Add this method to allow checking if the delegate matches
-    # a given object.
-    def delegates_to?(delegate)
-      @delegate == delegate
+    # object. Add these methods to allow checking the delegate.
+    def delegate
+      @delegate
+    end
+
+    def delegates_to?(other)
+      @delegate == other
     end
   end
 end
