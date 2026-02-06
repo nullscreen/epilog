@@ -75,7 +75,7 @@ module Epilog
 
       def event_hash(message, event)
         {
-          message: message,
+          message:,
           job: job_hash(event.payload[:job]),
           adapter: adapter_name(event.payload[:adapter])
         }
