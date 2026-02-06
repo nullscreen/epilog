@@ -43,7 +43,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[2][4]).to eq([context])
 
       expect(Rails.logger[3][0]).to eq('INFO')
-      expect(Rails.logger[3][3]).to eq(
+      expect(Rails.logger[3][3]).to match(
         message: 'GET /empty > 200 OK',
         request: {
           id: nil,
@@ -54,7 +54,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
           status: 200
         },
         metrics: {
-          db_runtime: 0,
+          db_runtime: 0.0,
           view_runtime: be_within(10).of(10),
           request_runtime: be_between(0, 20)
         }
@@ -63,7 +63,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
     end
 
     it 'logs a request with unpermitted parameters' do
-      get(:index, params(foo: 'bar'))
+      get(:index, **params(foo: 'bar'))
 
       expect(Rails.logger[1][0]).to eq('DEBUG')
       expect(Rails.logger[1][3]).to match(
@@ -75,15 +75,15 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
     end
 
     it 'removes default Rails params' do
-      get(:index, params(foo: 'bar', password: 'secret'))
+      get(:index, **params(foo: 'bar', password: 'secret'))
 
-      expect(Rails.logger[0][3]).to eq(hash_including(
+      expect(Rails.logger[0][3]).to include(
         message: 'GET /empty started',
-        request: hash_including(
+        request: include(
           path: '/empty',
           params: { 'foo' => 'bar', 'password' => '[FILTERED]' }
         )
-      ))
+      )
     end
 
     context 'with double_request_logs = false' do
@@ -95,9 +95,9 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
 
       it 'skips start log' do
         get(:index)
-        expect(Rails.logger[2][3]).to eq(hash_including(
+        expect(Rails.logger[2][3]).to include(
           message: 'GET /empty > 200 OK'
-        ))
+        )
       end
     end
   end
@@ -107,7 +107,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       get(:index)
 
       expect(Rails.logger[1][0]).to eq('INFO')
-      expect(Rails.logger[1][3]).to eq(
+      expect(Rails.logger[1][3]).to match(
         message: 'Redirect > https://www.google.com',
         metrics: {
           duration: be_between(0, 20)
@@ -123,7 +123,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       get(:index)
 
       expect(Rails.logger[2][0]).to eq('INFO')
-      expect(Rails.logger[2][3]).to eq(
+      expect(Rails.logger[2][3]).to match(
         message: 'Sent data test.txt',
         metrics: {
           duration: be_between(0, 20)
@@ -139,7 +139,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       get(:index)
 
       expect(Rails.logger[1][0]).to eq('INFO')
-      expect(Rails.logger[1][3]).to eq(
+      expect(Rails.logger[1][3]).to match(
         message: "Sent file #{filename}",
         metrics: {
           duration: be_between(0, 20)
@@ -155,7 +155,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       get(:index)
 
       expect(Rails.logger[2][0]).to eq('INFO')
-      expect(Rails.logger[2][3]).to eq(
+      expect(Rails.logger[2][3]).to match(
         message: 'Filter chain halted as :halt rendered or redirected',
         metrics: {
           duration: be_within(1).of(0)
@@ -176,14 +176,14 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
         l[3][:message].match(/(read|write)_fragment/)
       end
 
-      expect(logs[0][3]).to eq(
+      expect(logs[0][3]).to match(
         message: start_with('read_fragment views/'),
         metrics: {
           duration: be_between(0, 20)
         }
       )
 
-      expect(logs[1][3]).to eq(
+      expect(logs[1][3]).to match(
         message: start_with('write_fragment views/'),
         metrics: {
           duration: be_between(0, 20)
