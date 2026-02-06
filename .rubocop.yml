@@ -4,7 +4,7 @@ require:
 
 AllCops:
   SuggestExtensions: false
-  TargetRubyVersion: 2.3
+  TargetRubyVersion: 3.4
 
 Gemspec/DeprecatedAttributeAssignment: { Enabled: true }
 Gemspec/RequireMFA: { Enabled: true }
