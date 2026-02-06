@@ -19,7 +19,7 @@ RSpec.describe Epilog::Rails::ActionViewSubscriber, type: :controller do
     view.render(template: 'action_view/template')
 
     expect(Rails.logger[0][0]).to eq('DEBUG')
-    expect(Rails.logger[0][3]).to eq(
+    expect(Rails.logger[0][3]).to match(
       message: 'Rendered template',
       layout: nil,
       template: 'action_view/template.html.erb',
@@ -33,7 +33,7 @@ RSpec.describe Epilog::Rails::ActionViewSubscriber, type: :controller do
     view.render(template: 'action_view/template_w_partial')
 
     expect(Rails.logger[0][0]).to eq('DEBUG')
-    expect(Rails.logger[0][3]).to eq(
+    expect(Rails.logger[0][3]).to match(
       message: 'Rendered partial',
       layout: nil,
       template: 'action_view/_partial.html.erb',
@@ -47,7 +47,7 @@ RSpec.describe Epilog::Rails::ActionViewSubscriber, type: :controller do
     view.render(template: 'action_view/template_w_collection')
 
     expect(Rails.logger[0][0]).to eq('DEBUG')
-    expect(Rails.logger[0][3]).to eq(
+    expect(Rails.logger[0][3]).to match(
       message: 'Rendered collection',
       layout: nil,
       template: 'action_view/_collection.html.erb',

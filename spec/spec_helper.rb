@@ -22,9 +22,10 @@ require 'combustion'
 @orig_stdout = $stdout
 $stdout = File.open(File::NULL, 'w')
 
+MOCK_LOGGER = Epilog::MockLogger.new
+
 Combustion.path = 'spec/rails_app'
 Combustion.initialize! :all do
-  MOCK_LOGGER = Epilog::MockLogger.new
   config.logger = MOCK_LOGGER
   config.logger.progname = 'epilog'
   config.log_level = :debug
