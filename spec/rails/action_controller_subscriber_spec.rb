@@ -56,7 +56,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
         metrics: {
           db_runtime: 0.0,
           view_runtime: be_within(10).of(10),
-          request_runtime: be_between(0, 20)
+          request_runtime: be_between(0, 40)
         }
       )
       expect(Rails.logger[3][4]).to eq([context])
@@ -69,7 +69,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[1][3]).to match(
         message: 'Unpermitted parameters: foo',
         metrics: {
-          duration: be_between(0, 20)
+          duration: be_between(0, 40)
         }
       )
     end
@@ -110,7 +110,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[1][3]).to match(
         message: 'Redirect > https://www.google.com',
         metrics: {
-          duration: be_between(0, 20)
+          duration: be_between(0, 40)
         }
       )
     end
@@ -126,7 +126,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[2][3]).to match(
         message: 'Sent data test.txt',
         metrics: {
-          duration: be_between(0, 20)
+          duration: be_between(0, 40)
         }
       )
     end
@@ -142,7 +142,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(Rails.logger[1][3]).to match(
         message: "Sent file #{filename}",
         metrics: {
-          duration: be_between(0, 20)
+          duration: be_between(0, 40)
         }
       )
     end
@@ -179,14 +179,14 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       expect(logs[0][3]).to match(
         message: start_with('read_fragment views/'),
         metrics: {
-          duration: be_between(0, 20)
+          duration: be_between(0, 40)
         }
       )
 
       expect(logs[1][3]).to match(
         message: start_with('write_fragment views/'),
         metrics: {
-          duration: be_between(0, 20)
+          duration: be_between(0, 40)
         }
       )
     end

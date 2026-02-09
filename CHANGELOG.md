@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.9.0
+
+- Add support for Rails 7.0, 7.1, 7.2, and 8.0
+- Fix deprecation warning for `ActiveRecord::LogSubscriber.runtime` in Rails 7.1+
+- Update development dependencies
+- Update gems and CI
+
 ## 0.8.0
 
 - Update license to MIT [#19](https://github.com/nullscreen/epilog/pull/19)

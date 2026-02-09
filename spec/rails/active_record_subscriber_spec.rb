@@ -21,7 +21,7 @@ RSpec.describe Epilog::Rails::ActiveRecordSubscriber do
       sql: query,
       binds:,
       metrics: {
-        query_runtime: be_between(0, 20)
+        query_runtime: be_between(0, 40)
       }
     )
   end

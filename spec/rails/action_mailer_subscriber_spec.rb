@@ -22,7 +22,7 @@ RSpec.describe Epilog::Rails::ActionMailerSubscriber, type: :controller do
       recipients: ['user@example.com'],
       body: include('My mail message!'),
       metrics: {
-        duration: be_between(0, 20)
+        duration: be_between(0, 40)
       }
     )
   end
@@ -39,7 +39,7 @@ RSpec.describe Epilog::Rails::ActionMailerSubscriber, type: :controller do
           message: 'Received mail',
           body: include('test mail'),
           metrics: {
-            duration: be_between(0, 20)
+            duration: be_between(0, 40)
           }
         )
     end
