@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# For Rails 7.1+, the broadcast_to patch is applied in the railtie's
+# after_initialize block (see railtie.rb) to ensure the BroadcastLogger
+# class is fully defined before we patch it.
 if ::Rails.gem_version < Gem::Version.new('7.1')
   module ActiveSupport
     class Logger

@@ -60,6 +60,7 @@ module Epilog
       # initialization completes
       config.after_initialize do
         disable_rails_defaults
+        prevent_double_logs_from_broadcast
       end
 
       class << self
@@ -98,6 +99,21 @@ module Epilog
               end
             end
           end
+        end
+
+        # In Rails 7.1+, the server and console call Rails.logger.broadcast_to(console)
+        # which adds a second logger and causes every log line to appear twice
+        # (e.g. custom format + default Logger format). Override broadcast_to with
+        # a no-op to prevent adding duplicate destinations.
+        #
+        # This must be done in after_initialize (not at require time) because:
+        # 1. Rails wraps the logger in a BroadcastLogger during bootstrap
+        # 2. We need to override the instance method on the actual Rails.logger
+        def prevent_double_logs_from_broadcast
+          return if ::Rails.gem_version < Gem::Version.new('7.1')
+          return unless ::Rails.logger
+
+          ::Rails.logger.define_singleton_method(:broadcast_to) { |*| nil }
         end
 
         def blacklisted_subscribers
