@@ -4,12 +4,12 @@ source 'https://rubygems.org'
 gemspec
 
 not_jruby = %i[ruby mingw x64_mingw].freeze
-rails_version = Gem::Version.new(ENV.fetch('RAILS_VERSION', '7.1.0'))
+rails_version = Gem::Version.new(ENV.fetch('RAILS_VERSION', '7.0.0'))
 
 gem 'byebug', platforms: not_jruby
 gem 'rails', "~> #{rails_version}"
 gem 'redcarpet', '~> 3.5', platforms: not_jruby
-gem 'rubocop', '~> 1.36.0'
+gem 'rubocop', '~> 1.46'
 gem 'rubocop-rspec', '~> 2.12.0'
 gem 'simplecov', '>= 0.17.1'
 gem 'simplecov-cobertura', '~> 2.1'
