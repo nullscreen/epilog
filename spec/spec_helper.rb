@@ -53,7 +53,11 @@ RSpec.configure do |config|
   config.disable_monkey_patching!
 
   config.before do
-    Rails.logger.reset
+    if Rails.logger.respond_to?(:broadcasts)
+      Rails.logger.broadcasts.first.reset
+    else
+      Rails.logger.reset
+    end
   end
 
   config.after do

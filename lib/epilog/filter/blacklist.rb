@@ -13,7 +13,7 @@ module Epilog
       attr_reader :blacklist
 
       def initialize(blacklist = DEFAULT_BLACKLIST)
-        @blacklist = blacklist.map { |b| [b.to_s.downcase, nil] }.to_h
+        @blacklist = blacklist.to_h { |b| [b.to_s.downcase, nil] }
         super()
       end
 

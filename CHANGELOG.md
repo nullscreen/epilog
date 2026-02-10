@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.9.0
+
+- Add support for Rails 7.0 and Rails 7.1
+- Drop support for Rails < 7.0
+- Drop support for Ruby < 3.3
+- Update dev and runtime dependencies
+
 ## 0.8.0
 
 - Update license to MIT [#19](https://github.com/nullscreen/epilog/pull/19)

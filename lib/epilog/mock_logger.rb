@@ -2,8 +2,8 @@
 
 module Epilog
   class MockLogger < ::Logger
-    def initialize(**options)
-      super(nil, **options)
+    def initialize(**)
+      super(nil, **)
       reset
     end
 

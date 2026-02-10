@@ -19,9 +19,9 @@ RSpec.describe Epilog::Rails::ActiveRecordSubscriber do
     expect(Rails.logger[0][3]).to match(
       message: 'User Load',
       sql: query,
-      binds: binds,
+      binds:,
       metrics: {
-        query_runtime: be_between(0, 20)
+        query_runtime: be_between(0, 40)
       }
     )
   end

@@ -6,7 +6,7 @@ module Epilog
       IGNORE_PAYLOAD_NAMES = %w[SCHEMA EXPLAIN].freeze
 
       def sql(event)
-        ActiveRecord::LogSubscriber.runtime += event.duration
+        ActiveRecord::RuntimeRegistry.sql_runtime = (ActiveRecord::RuntimeRegistry.sql_runtime || 0) + event.duration
 
         return unless logger.debug?
 

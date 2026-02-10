@@ -5,29 +5,27 @@ module Epilog
     def process_action(*)
       epilog_instrument('request_received')
       epilog_instrument('process_request') do |payload|
-        begin
-          super
-        ensure
-          payload[:response] = response
-          payload[:metrics] = epilog_metrics
-        end
+        super
+      ensure
+        payload[:response] = response
+        payload[:metrics] = epilog_metrics
       end
     end
 
     private
 
-    def epilog_instrument(name, &block)
+    def epilog_instrument(name, &)
       ActiveSupport::Notifications.instrument(
         "#{name}.action_controller",
         epilog_payload,
-        &block
+        &
       )
     end
 
     def epilog_payload
       {
-        request: request,
-        response: response,
+        request:,
+        response:,
         controller: self.class.name,
         action: action_name,
         context: epilog_context
@@ -37,7 +35,7 @@ module Epilog
     def epilog_metrics
       {
         db_runtime: try(:db_runtime),
-        view_runtime: view_runtime
+        view_runtime:
       }
     end
 

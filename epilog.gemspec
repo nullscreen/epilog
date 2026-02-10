@@ -24,11 +24,11 @@ Gem::Specification.new do |spec|
   spec.files = Dir['lib/**/*.rb', '*.md', '*.txt', '.yardopts']
   spec.require_paths = ['lib']
 
-  spec.required_ruby_version = '>= 2.3'
+  spec.required_ruby_version = '>= 3.3'
 
   spec.add_development_dependency 'combustion', '~> 1.3'
-  spec.add_development_dependency 'rails', '>= 4.2', '< 7'
+  spec.add_development_dependency 'rails', '>= 4.2'
   spec.add_development_dependency 'rspec', '~> 3.11'
-  spec.add_development_dependency 'rspec-rails', '~> 5.1'
-  spec.add_development_dependency 'sqlite3', '~> 1.3'
+  spec.add_development_dependency 'rspec-rails', '>= 7.0'
+  spec.add_development_dependency 'sqlite3', '>= 1.4'
 end
