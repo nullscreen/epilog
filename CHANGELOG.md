@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.1
+
+- Remove Rails 8 from CI
+
 ## 0.9.0
 
 - Add support for Rails 7.0 and Rails 7.1
