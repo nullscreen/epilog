@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.10.0
+
+- Drop support for Rails < 7
+- Drop support for Ruby < 3.3
+- Add support for Rails 7 and 7.1
+
 ## 0.9.0
 
 - Add support for Rails 7.0, 7.1, 7.2, and 8.0
