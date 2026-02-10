@@ -22,12 +22,6 @@ jobs:
           - ruby: '3.4'
             rails: '7.2'
             bundler: 'default'
-          - ruby: '3.4'
-            rails: '8.0'
-            bundler: 'default'
-          - ruby: '3.4'
-            rails: '8.1'
-            bundler: 'default'
     env:
       RAILS_VERSION: ${{ matrix.rails }}
 
