@@ -198,7 +198,7 @@ RSpec.describe Epilog::Rails::ActionControllerSubscriber do
       Rails.logger.info('middle')
       expect { get(:index) }.to raise_error('Something bad happened')
 
-      controller_log = [request: hash_including(path: '/error')]
+      controller_log = [{ request: hash_including(path: '/error') }]
       expect(Rails.logger[0][4]).to match(controller_log)
       expect(Rails.logger[2][4]).to eq([])
       expect(Rails.logger[3][4]).to match(controller_log)
