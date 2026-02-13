@@ -55,12 +55,26 @@ module Epilog
         end
       end
 
+      # In Rails 7.1+, the server, console, and other components (like Sidekiq)
+      # call Rails.logger.broadcast_to() to add additional log destinations.
+      # This causes duplicate log lines and can lead to blocks being executed
+      # multiple times (via BroadcastLogger's method_missing delegation).
+      #
+      # This initializer runs AFTER :initialize_logger (which wraps the logger
+      # in a BroadcastLogger) but BEFORE any after_initialize hooks (where
+      # Sidekiq and others add their loggers). This ensures the no-op is in
+      # place before anyone tries to call broadcast_to.
+      initializer 'epilog.prevent_broadcast', after: :initialize_logger do
+        if ::Rails.gem_version >= Gem::Version.new('7.1') && ::Rails.logger
+          ::Rails.logger.define_singleton_method(:broadcast_to) { |*| nil }
+        end
+      end
+
       # In Rails 7.1+, ActionView::LogSubscriber::Start are attached late
       # in the initialization process, so we need to disable them after
       # initialization completes
       config.after_initialize do
         disable_rails_defaults
-        prevent_double_logs_from_broadcast
       end
 
       class << self
@@ -99,21 +113,6 @@ module Epilog
               end
             end
           end
-        end
-
-        # In Rails 7.1+, the server and console call Rails.logger.broadcast_to(console)
-        # which adds a second logger and causes every log line to appear twice
-        # (e.g. custom format + default Logger format). Override broadcast_to with
-        # a no-op to prevent adding duplicate destinations.
-        #
-        # This must be done in after_initialize (not at require time) because:
-        # 1. Rails wraps the logger in a BroadcastLogger during bootstrap
-        # 2. We need to override the instance method on the actual Rails.logger
-        def prevent_double_logs_from_broadcast
-          return if ::Rails.gem_version < Gem::Version.new('7.1')
-          return unless ::Rails.logger
-
-          ::Rails.logger.define_singleton_method(:broadcast_to) { |*| nil }
         end
 
         def blacklisted_subscribers

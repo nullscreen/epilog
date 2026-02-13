@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.2
+
+- Fix double log issue in Rails 7.1+
+
 ## 0.9.1
 
 - Remove Rails 8 from CI
