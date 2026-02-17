@@ -100,7 +100,7 @@ RSpec.describe Epilog::Rails::ActiveJobSubscriber do
       expect { described_class.perform_later }
         .to raise_error('Something went wrong')
 
-      job_context = [job: hash_including(class: 'TestErrorJob')]
+      job_context = [{ job: hash_including(class: 'TestErrorJob') }]
       expect(Rails.logger[0][4]).to match(job_context)
       expect(Rails.logger[2][4]).to eq([])
       log_line = Rails::VERSION::MAJOR >= 6 ? 4 : 3
