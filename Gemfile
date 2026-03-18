@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 gemspec
 
 not_jruby = %i[ruby mingw x64_mingw].freeze
-rails_version = Gem::Version.new(ENV.fetch('RAILS_VERSION', '7.1.0'))
+rails_version = Gem::Version.new(ENV.fetch('RAILS_VERSION', '8.0.0'))
 
 gem 'byebug', platforms: not_jruby
 gem 'rails', "~> #{rails_version}"
