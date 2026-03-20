@@ -6,7 +6,7 @@ module Epilog
       IGNORE_PAYLOAD_NAMES = %w[SCHEMA EXPLAIN].freeze
 
       def sql(event)
-        ActiveRecord::RuntimeRegistry.sql_runtime = (ActiveRecord::RuntimeRegistry.sql_runtime || 0) + event.duration
+        record_sql_runtime(event.duration)
 
         return unless logger.debug?
 
@@ -22,6 +22,17 @@ module Epilog
       end
 
       private
+
+      # Rails 8.1 moved sql_runtime from a module-level accessor to
+      # ActiveRecord::RuntimeRegistry.stats.sql_runtime (a Stats object).
+      # See https://github.com/rails/rails/commit/7d12071e9fe94bd5c01a488ef61718fe88de65b4
+      def record_sql_runtime(duration)
+        if ActiveRecord::RuntimeRegistry.respond_to?(:sql_runtime=)
+          ActiveRecord::RuntimeRegistry.sql_runtime = (ActiveRecord::RuntimeRegistry.sql_runtime || 0) + duration
+        else
+          ActiveRecord::RuntimeRegistry.stats.sql_runtime += duration
+        end
+      end
 
       def metrics(event)
         {
