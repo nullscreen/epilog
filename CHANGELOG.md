@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.10.0
+
+- Add support for Rails 8.0 and Rails 8.1
+- Fix ActiveRecord subscriber for Rails 8.1 RuntimeRegistry API change
+- Fix CI version pinning to use three-segment version constraints
+
 ## 0.9.2
 
 - Fix double log issue in Rails 7.1+
